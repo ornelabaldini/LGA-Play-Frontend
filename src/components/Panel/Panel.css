@@ -1,6 +1,6 @@
 .panel {
   background: var(--blanco);
-  padding: 30px;
+  padding: 10px;
   margin-bottom: 28px;
   border-radius: var(--radio);
   border-top: 4px solid var(--verde-cancha);
@@ -10,7 +10,7 @@
 .panel h2 {
   margin: 0 0 24px;
   color: #111827;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 800;
   letter-spacing: -0.4px;
 }

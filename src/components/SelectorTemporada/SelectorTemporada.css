@@ -22,18 +22,13 @@
 
 .selector select {
   min-width: 120px;
-
-  padding: 10px 14px;
-
+  padding: 10px 7px;
   border: 2px solid var(--gris-claro);
   border-radius: 10px;
-
   background: var(--blanco);
   color: var(--negro);
-
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
-
   cursor: pointer;
 }
 

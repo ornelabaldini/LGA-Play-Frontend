@@ -157,3 +157,75 @@
     font-size: 13px;
   }
 }
+
+/* HEADER PREMIUM */
+.header {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Destello que atraviesa el header */
+.header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 35%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.10),
+    transparent
+  );
+  transform: skewX(-20deg);
+  animation: brilloHeader 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes brilloHeader {
+  0% {
+    left: -40%;
+  }
+
+  45%,
+  100% {
+    left: 120%;
+  }
+}
+
+
+/* Entrada elegante del contenido */
+.header__contenido {
+  animation: aparecerHeader 0.7s ease-out both;
+}
+
+@keyframes aparecerHeader {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Logo: pequeño efecto al aparecer */
+.header__logo {
+  animation: aparecerLogo 0.8s cubic-bezier(.2,.8,.2,1) both;
+}
+
+@keyframes aparecerLogo {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

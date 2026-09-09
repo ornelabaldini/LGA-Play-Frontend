@@ -1,9 +1,13 @@
+
 import { useState } from 'react'
 
-import Footer from "./components/Footer/Footer";
+import Footer from "./components/Footer/Footer"
 import Header from './components/Header/Header'
 import Hero from './components/Hero/Hero'
 import TablaPosiciones from './components/TablaPosiciones/TablaPosiciones'
+import Panel from './components/Panel/Panel'
+import SelectorTemporada from './components/SelectorTemporada/SelectorTemporada'
+import MenuPrincipal from './components/MenuPrincipal/MenuPrincipal'
 
 import './App.css'
 
@@ -17,15 +21,7 @@ function App() {
       <main className="contenido">
         <Hero />
 
-        <section className="selector">
-          <label htmlFor="temporada">Temporada</label>
-
-          <select id="temporada">
-            <option>2026</option>
-            <option>2025</option>
-            <option>2024</option>
-          </select>
-        </section>
+        <SelectorTemporada />
 
         <nav className="menu">
           <button onClick={() => setSeccion('tabla')}>
@@ -46,37 +42,33 @@ function App() {
         </nav>
 
         {seccion === 'tabla' && (
-          <section className="panel">
-            <h2>🏆 Tabla de posiciones</h2>
+          <Panel titulo="🏆 Tabla de posiciones">
             <TablaPosiciones />
-          </section>
+          </Panel>
         )}
 
         {seccion === 'partidos' && (
-          <section className="panel">
-            <h2>⚽ Partidos / resultados</h2>
+          <Panel titulo="⚽ Partidos / resultados">
             <p>
               Acá aparecerán los partidos y resultados de la temporada seleccionada.
             </p>
-          </section>
+          </Panel>
         )}
 
         {seccion === 'goleadores' && (
-          <section className="panel">
-            <h2>👟 Goleadores</h2>
+          <Panel titulo="👟 Goleadores">
             <p>
               Acá aparecerá la tabla de goleadores.
             </p>
-          </section>
+          </Panel>
         )}
 
         {seccion === 'playoffs' && (
-          <section className="panel">
-            <h2>🔥 Playoffs</h2>
+          <Panel titulo="🔥 Playoffs">
             <p>
               Acá aparecerá el cuadro de playoffs.
             </p>
-          </section>
+          </Panel>
         )}
       </main>
 
