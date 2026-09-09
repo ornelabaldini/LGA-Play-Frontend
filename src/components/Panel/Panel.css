@@ -21,12 +21,12 @@
 
 @media (max-width: 700px) {
   .panel {
-    padding: 20px;
+    padding: 5px;
     margin-bottom: 20px;
   }
 
   .panel h2 {
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     font-size: 22px;
   }
 }

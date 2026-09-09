@@ -2,16 +2,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-
+  gap: 10px;
   padding: 20px 24px;
   margin-bottom: 25px;
-
   background: var(--blanco);
-
   border-radius: var(--radio);
   border-left: 6px solid var(--verde-claro);
-
   box-shadow: var(--sombra);
 }
 
