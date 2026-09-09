@@ -28,162 +28,209 @@
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
 
+
+/* =========================
+   CANCHA
+========================= */
+
 .header__cancha {
   position: absolute;
   inset: 0;
+
   pointer-events: none;
-  opacity: 0.25;
+
+  opacity: 0.22;
 }
 
-.header__linea {
+
+/* Línea central */
+
+.header__lineaCentral {
   position: absolute;
 
-  width: 80%;
-  height: 80px;
+  top: 0;
+  bottom: 0;
+  left: 50%;
 
-  left: 10%;
-  top: 35px;
+  width: 2px;
+
+  background: white;
+
+  transform: translateX(-50%);
+}
+
+
+/* Círculo central */
+
+.header__circuloCentral {
+  position: absolute;
+
+  width: 105px;
+  height: 105px;
+
+  left: 50%;
+  top: 50%;
 
   border: 2px solid white;
   border-radius: 50%;
+
+  transform: translate(-50%, -50%);
 }
 
-.header__circulo {
+
+/* Punto central */
+
+.header__circuloCentral::after {
+  content: "";
+
   position: absolute;
 
-  width: 18px;
-  height: 18px;
+  width: 7px;
+  height: 7px;
 
   background: white;
   border-radius: 50%;
 
   left: 50%;
-  top: 66px;
+  top: 50%;
 
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
 }
 
-.header__contenido {
-  position: relative;
-  z-index: 1;
 
-  display: flex;
-  align-items: center;
-  gap: 18px;
+/* =========================
+   ÁREAS GRANDES
+========================= */
 
-  text-align: left;
+.header__area {
+  position: absolute;
+
+  top: 22px;
+
+  width: 100px;
+  height: 106px;
+
+  border: 2px solid white;
 }
 
-.logo-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Área izquierda */
 
-  background: rgba(0, 0, 0, 0.75);
-  cursor: pointer;
+.header__area--izquierda {
+  left: 0;
+
+  border-left: none;
 }
 
-.logo-modal img {
-  display: block;
-  width: auto;
-  height: auto;
 
-  max-width: 90vw;
-  max-height: 90vh;
+/* Área derecha */
 
-  object-fit: contain;
+.header__area--derecha {
+  right: 0;
+
+  border-right: none;
 }
 
-.header__logo {
-  width: 70px;
-  height: 70px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* =========================
+   ÁREAS CHICAS
+========================= */
 
-  background: white;
-  border-radius: 50%;
+.header__areaChica {
+  position: absolute;
 
-  font-size: 38px;
+  top: 45px;
 
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 45px;
+  height: 60px;
+
+  border: 2px solid white;
 }
 
-.header__logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 50%;
+
+/* Izquierda */
+
+.header__areaChica--izquierda {
+  left: 0;
+
+  border-left: none;
 }
 
-.header h1 {
-  margin: 0;
 
-  font-size: 34px;
-  font-weight: 900;
-  letter-spacing: 1px;
+/* Derecha */
+
+.header__areaChica--derecha {
+  right: 0;
+
+  border-right: none;
 }
 
-.header p {
-  margin: 5px 0 0;
 
-  font-size: 16px;
-  font-weight: 600;
+/* =========================
+   ARCOS
+========================= */
 
-  opacity: 0.9;
+.header__arco {
+  position: absolute;
+
+  top: 60px;
+
+  width: 12px;
+  height: 30px;
+
+  border: 2px solid white;
 }
 
-@media (max-width: 700px) {
-  .header {
-    min-height: 120px;
-  }
 
-  .header__logo {
-    width: 54px;
-    height: 54px;
-    font-size: 30px;
-  }
+/* Arco izquierdo */
 
-  .header h1 {
-    font-size: 25px;
-  }
+.header__arco--izquierda {
+  left: 0;
 
-  .header p {
-    font-size: 13px;
-  }
+  border-left: none;
 }
 
-/* HEADER PREMIUM */
-.header {
-  position: relative;
-  overflow: hidden;
+
+/* Arco derecho */
+
+.header__arco--derecha {
+  right: 0;
+
+  border-right: none;
 }
 
-/* Destello que atraviesa el header */
+
+/* =========================
+   BRILLO DEL HEADER
+========================= */
+
 .header::after {
   content: "";
+
   position: absolute;
+
   top: 0;
   left: -40%;
+
   width: 35%;
   height: 100%;
+
   background: linear-gradient(
     90deg,
     transparent,
     rgba(255, 255, 255, 0.10),
     transparent
   );
+
   transform: skewX(-20deg);
+
   animation: brilloHeader 6s ease-in-out infinite;
+
   pointer-events: none;
 }
 
 @keyframes brilloHeader {
+
   0% {
     left: -40%;
   }
@@ -195,12 +242,26 @@
 }
 
 
-/* Entrada elegante del contenido */
+/* =========================
+   CONTENIDO
+========================= */
+
 .header__contenido {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+
+  gap: 18px;
+
+  text-align: left;
+
   animation: aparecerHeader 0.7s ease-out both;
 }
 
 @keyframes aparecerHeader {
+
   from {
     opacity: 0;
     transform: translateY(8px);
@@ -213,12 +274,46 @@
 }
 
 
-/* Logo: pequeño efecto al aparecer */
+/* =========================
+   LOGO
+========================= */
+
 .header__logo {
-  animation: aparecerLogo 0.8s cubic-bezier(.2,.8,.2,1) both;
+  width: 76px;
+  height: 76px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 5px;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.25),
+    0 0 0 3px rgba(255, 255, 255, 0.25);
+
+  overflow: hidden;
+
+  cursor: pointer;
+
+  animation: aparecerLogo 0.8s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.header__logo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  border-radius: 12px;
 }
 
 @keyframes aparecerLogo {
+
   from {
     opacity: 0;
     transform: scale(0.85);
@@ -227,5 +322,111 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+
+/* =========================
+   TEXTO
+========================= */
+
+.header__texto {
+  position: relative;
+  z-index: 2;
+}
+
+.header h1 {
+  margin: 0;
+
+  font-size: 34px;
+  font-weight: 900;
+
+  letter-spacing: 1px;
+}
+
+.header p {
+  margin: 5px 0 0;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  opacity: 0.9;
+}
+
+
+/* =========================
+   MODAL DEL LOGO
+========================= */
+
+.logo-modal {
+  position: fixed;
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.75);
+
+  cursor: pointer;
+}
+
+.logo-modal img {
+  display: block;
+
+  width: auto;
+  height: auto;
+
+  max-width: 90vw;
+  max-height: 90vh;
+
+  object-fit: contain;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+  .header {
+    min-height: 120px;
+  }
+
+  .header__logo {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 14px;
+  }
+
+  .header__contenido {
+    gap: 12px;
+  }
+
+  .header h1 {
+    font-size: 25px;
+  }
+
+  .header p {
+    font-size: 13px;
+  }
+
+  .header__circuloCentral {
+    width: 80px;
+    height: 80px;
+  }
+
+  .header__area {
+    width: 75px;
+    height: 76px;
+  }
+
+  .header__areaChica {
+    width: 35px;
+    height: 45px;
   }
 }
