@@ -1,0 +1,151 @@
+.footer {
+  position: relative;
+  min-height: 150px;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--blanco);
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.035) 0,
+      rgba(255, 255, 255, 0.035) 70px,
+      rgba(0, 0, 0, 0.04) 70px,
+      rgba(0, 0, 0, 0.04) 140px
+    ),
+    linear-gradient(
+      135deg,
+      var(--verde-oscuro),
+      var(--verde-cancha),
+      var(--verde-oscuro)
+    );
+
+  border-top: 4px solid var(--blanco);
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.footer__cancha {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+  opacity: 0.25;
+}
+
+.footer__linea {
+  position: absolute;
+
+  width: 80%;
+  height: 80px;
+
+  left: 10%;
+  top: 35px;
+
+  border: 2px solid white;
+  border-radius: 50%;
+}
+
+.footer__circulo {
+  position: absolute;
+
+  width: 18px;
+  height: 18px;
+
+  background: white;
+  border-radius: 50%;
+
+  left: 50%;
+  top: 66px;
+
+  transform: translateX(-50%);
+}
+
+.footer__contenido {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 1200px;
+
+  padding: 28px 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  gap: 8px;
+}
+
+.footer__titulo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.footer__titulo strong {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.footer__titulo span {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.footer__info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 8px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  opacity: 0.85;
+}
+
+.footer__copyright {
+  margin-top: 8px;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  opacity: 0.7;
+}
+
+@media (max-width: 700px) {
+  .footer {
+    min-height: 135px;
+  }
+
+  .footer__contenido {
+    padding: 24px 16px;
+  }
+
+  .footer__titulo strong {
+    font-size: 19px;
+  }
+
+  .footer__titulo span {
+    font-size: 13px;
+  }
+
+  .footer__info {
+    font-size: 12px;
+    gap: 7px;
+  }
+
+  .footer__copyright {
+    font-size: 11px;
+  }
+}

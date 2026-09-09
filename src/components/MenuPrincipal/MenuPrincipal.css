@@ -1,0 +1,94 @@
+.menu {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.menu button {
+  position: relative;
+
+  min-height: 85px;
+  padding: 14px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  border: none;
+  border-radius: 14px;
+
+  background: var(--blanco);
+  color: var(--negro);
+
+  font-size: 16px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow: var(--sombra);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.menu button::after {
+  content: "";
+
+  position: absolute;
+
+  bottom: 0;
+  left: 15%;
+  right: 15%;
+
+  height: 4px;
+
+  background: var(--verde-cancha);
+
+  border-radius: 4px 4px 0 0;
+
+  transform: scaleX(0);
+
+  transition: transform 0.2s ease;
+}
+
+.menu button:hover {
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 12px 28px rgba(15, 23, 42, 0.18);
+}
+
+.menu button:hover::after {
+  transform: scaleX(1);
+}
+
+.menu button:focus-visible {
+  outline: 3px solid var(--verde-claro);
+}
+
+.menu__icono {
+  font-size: 25px;
+}
+
+@media (max-width: 900px) {
+  .menu {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .menu {
+    gap: 10px;
+  }
+
+  .menu button {
+    min-height: 70px;
+    font-size: 14px;
+  }
+}

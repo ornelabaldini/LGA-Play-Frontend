@@ -1,0 +1,30 @@
+
+.hero {
+  text-align: center;
+  color: var(--negro);
+  margin-bottom: 30px;
+}
+
+.hero h2 {
+  margin: 0 0 8px;
+  font-size: 23px;
+  font-weight: 900;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+.hero p {
+  margin: 0;
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+  .hero h2 {
+    font-size: 28px;
+  }
+
+  .hero p {
+    font-size: 14px;
+  }
+}
