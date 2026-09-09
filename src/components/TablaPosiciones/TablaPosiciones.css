@@ -58,3 +58,15 @@
     font-size: 13px;
   }
 }
+
+@media (max-width: 360px) {
+  .tabla-posiciones {
+    min-width: 300px;
+  }
+
+  .tabla-posiciones th,
+  .tabla-posiciones td {
+    padding: 10px 8px;
+    font-size: 9px;
+  }
+}
