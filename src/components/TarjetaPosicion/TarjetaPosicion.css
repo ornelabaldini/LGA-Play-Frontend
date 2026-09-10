@@ -1,0 +1,64 @@
+.tarjeta-posicion {
+  display: block;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: var(--blanco);
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tarjeta-posicion:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tarjeta-posicion__encabezado {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.tarjeta-posicion__puesto {
+  min-width: 26px;
+  color: var(--verde-oscuro);
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.tarjeta-posicion__nombre {
+  flex: 1;
+  font-size: 15px;
+}
+
+.tarjeta-posicion__puntos {
+  color: var(--verde-oscuro);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.tarjeta-posicion__estadisticas {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.tarjeta-posicion__estadisticas span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.tarjeta-posicion__estadisticas small {
+  margin-bottom: 3px;
+  color: #6b7280;
+  font-size: 10px;
+  font-weight: 700;
+}

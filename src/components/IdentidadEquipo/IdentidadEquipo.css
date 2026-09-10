@@ -1,0 +1,27 @@
+.identidad-equipo {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: inline-block;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: var(--color-principal);
+}
+
+.identidad-equipo--horizontal {
+  background: linear-gradient(
+    to bottom,
+    var(--color-principal) 0 38%,
+    var(--color-secundario) 38% 62%,
+    var(--color-principal) 62% 100%
+  );
+}
+
+.identidad-equipo--vertical {
+  background: linear-gradient(
+    to right,
+    var(--color-principal) 0 33%,
+    var(--color-secundario) 33% 67%,
+    var(--color-principal) 67% 100%
+  );
+}

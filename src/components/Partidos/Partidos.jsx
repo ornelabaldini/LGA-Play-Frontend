@@ -1,6 +1,21 @@
 import { useEffect, useState } from "react";
-import { getMatches } from "../../services/matchsService";
+import { getMatchesWithTeams } from "../../services/matchsService";
+import TarjetaPartido from "../TarjetaPartido/TarjetaPartido";
 import "./Partidos.css";
+
+function agruparPorFecha(partidos) {
+  return partidos.reduce((fechas, partido) => {
+    const fecha = partido.matchday;
+
+    if (!fechas[fecha]) {
+      fechas[fecha] = [];
+    }
+
+    fechas[fecha].push(partido);
+
+    return fechas;
+  }, {});
+}
 
 function Partidos() {
   const [partidos, setPartidos] = useState([]);
@@ -8,7 +23,7 @@ function Partidos() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    getMatches()
+    getMatchesWithTeams()
       .then((data) => {
         setPartidos(data);
       })
@@ -28,23 +43,57 @@ function Partidos() {
     return <p>Error al cargar los partidos: {error}</p>;
   }
 
+  const partidosPorFecha = agruparPorFecha(partidos);
+
   return (
     <div className="partidos">
-      {partidos.map((partido) => (
-        <article className="partido" key={partido.id_match}>
-          <span>Fecha {partido.matchday}</span>
+      {Object.entries(partidosPorFecha).map(
+        ([fecha, partidosDeFecha]) => {
+          const jugados = partidosDeFecha.filter(
+            (partido) => partido.jugado
+          );
 
-          <div>
-            <strong>Equipo {partido.teamA_id}</strong>
+          const pendientes = partidosDeFecha.filter(
+            (partido) => !partido.jugado
+          );
 
-            <span>
-              {partido.goalsA} - {partido.goalsB}
-            </span>
+          return (
+            <section className="fecha-fixture" key={fecha}>
+              <h3>Fecha {fecha}</h3>
 
-            <strong>Equipo {partido.teamB_id}</strong>
-          </div>
-        </article>
-      ))}
+              {jugados.length > 0 && (
+                <>
+                  <h4>Resultados</h4>
+
+                  <div className="fecha-fixture__lista">
+                    {jugados.map((partido) => (
+                      <TarjetaPartido
+                        key={partido.id_match}
+                        partido={partido}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {pendientes.length > 0 && (
+                <>
+                  <h4>Próximos partidos</h4>
+
+                  <div className="fecha-fixture__lista">
+                    {pendientes.map((partido) => (
+                      <TarjetaPartido
+                        key={partido.id_match}
+                        partido={partido}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </section>
+          );
+        }
+      )}
     </div>
   );
 }

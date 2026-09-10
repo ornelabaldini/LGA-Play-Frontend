@@ -1,30 +1,86 @@
-
 .hero {
-  text-align: center;
-  color: var(--negro);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  text-align: left;
 }
 
 .hero h2 {
-  margin: 0 0 8px;
-  font-size: 23px;
-  font-weight: 900;
-  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  margin: -15px 0 10px;
+  color: var(--negro);
+  font-size: 19px;
+  text-shadow: none;
 }
 
-.hero p {
-  margin: 0;
-  font-size: 15px;
+.podio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.podio-equipo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px;
+  border-left: 4px solid;
+  border-radius: 10px;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.08);
+}
+
+.podio-puesto {
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.podio-equipo strong {
+  flex: 1;
+  font-size: 14px;
+}
+
+.podio-puntos {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* Primer puesto */
+.podio-equipo:nth-child(1) {
+  background: #fff8dc;
+  border-left-color: #d4af37;
+}
+
+.podio-equipo:nth-child(1) .podio-puesto,
+.podio-equipo:nth-child(1) .podio-puntos {
+  color: #9a7400;
+}
+
+/* Plata */
+.podio-equipo:nth-child(2) {
+  background: #f8fafc;
+  border-left-color: #cbd5e1;
+}
+
+.podio-equipo:nth-child(2) .podio-puesto,
+.podio-equipo:nth-child(2) .podio-puntos {
+  color: #64748b;
+}
+
+/* Bronce */
+.podio-equipo:nth-child(3) {
+  background: #fdf8f4;
+  border-left-color: #d6b08b;
+}
+
+.podio-equipo:nth-child(3) .podio-puesto,
+.podio-equipo:nth-child(3) .podio-puntos {
+  color: #9a6a42;
+}
+
+.resumen-cargando {
+  margin: 0 0 18px;
   color: #4b5563;
-  line-height: 1.5;
 }
 
 @media (max-width: 700px) {
-  .hero h2 {
-    font-size: 28px;
-  }
-
-  .hero p {
-    font-size: 14px;
+  .podio {
+    grid-template-columns: 1fr;
   }
 }

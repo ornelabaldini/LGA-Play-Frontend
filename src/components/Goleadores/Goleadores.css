@@ -1,0 +1,82 @@
+.goleadores {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.botin-oro {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #ead28c;
+  border-left: 5px solid #d4af37;
+  border-radius: 12px;
+  background: #fff8dc;
+}
+
+.botin-oro > span {
+  font-size: 28px;
+}
+
+.botin-oro div {
+  flex: 1;
+}
+
+.botin-oro p {
+  margin: 0 0 3px;
+  color: #9a7400;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.botin-oro strong {
+  font-size: 17px;
+}
+
+.botin-oro b {
+  color: #9a7400;
+  white-space: nowrap;
+}
+
+.tabla-goleadores {
+  display: grid;
+  gap: 8px;
+}
+
+.fila-goleador {
+  display: grid;
+  grid-template-columns: 34px 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: var(--blanco);
+}
+
+.fila-goleador > span:first-child {
+  color: var(--verde-oscuro);
+  font-weight: 900;
+}
+
+.fila-goleador > span:nth-child(3) {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.fila-goleador b {
+  color: var(--verde-oscuro);
+  white-space: nowrap;
+}
+
+@media (max-width: 500px) {
+  .fila-goleador {
+    grid-template-columns: 30px 1fr auto;
+    gap: 8px;
+  }
+
+  .fila-goleador > span:nth-child(3) {
+    display: none;
+  }
+}

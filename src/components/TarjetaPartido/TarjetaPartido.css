@@ -1,0 +1,61 @@
+.tarjeta-partido {
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: var(--blanco);
+}
+
+.tarjeta-partido__estado {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.tarjeta-partido__estado--jugado {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.tarjeta-partido__estado--pendiente {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.tarjeta-partido__equipos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.tarjeta-partido__equipos strong {
+  overflow: hidden;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tarjeta-partido__visitante {
+  text-align: right;
+}
+
+.tarjeta-partido__resultado {
+  padding: 6px 10px;
+  border-radius: 7px;
+  background: var(--gris-fondo);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+@media (max-width: 500px) {
+  .tarjeta-partido__equipos {
+    gap: 8px;
+  }
+
+  .tarjeta-partido__equipos strong {
+    font-size: 13px;
+  }
+}
