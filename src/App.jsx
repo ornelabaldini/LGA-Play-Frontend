@@ -8,6 +8,7 @@ import TablaPosiciones from './components/TablaPosiciones/TablaPosiciones'
 import Panel from './components/Panel/Panel'
 import SelectorTemporada from './components/SelectorTemporada/SelectorTemporada'
 import MenuPrincipal from './components/MenuPrincipal/MenuPrincipal'
+import Partidos from "./components/Partidos/Partidos"
 
 import './App.css'
 
@@ -47,11 +48,9 @@ function App() {
           </Panel>
         )}
 
-        {seccion === 'partidos' && (
+       {seccion === 'partidos' && (
           <Panel titulo="⚽ Partidos / resultados">
-            <p>
-              Acá aparecerán los partidos y resultados de la temporada seleccionada.
-            </p>
+            <Partidos />
           </Panel>
         )}
 
