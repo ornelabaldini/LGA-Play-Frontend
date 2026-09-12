@@ -2,10 +2,12 @@ import "./MenuPrincipal.css";
 
 function MenuPrincipal({ seccion, setSeccion }) {
   const opciones = [
+    { icono: "📝", texto: "Cargar resultado", seccion: "cargarResultado" },
     { icono: "🏆", texto: "Tabla de posiciones", seccion: "tabla" },
     { icono: "📅", texto: "Fixture y resultados", seccion: "partidos" },
     { icono: "👟", texto: "Goleadores", seccion: "goleadores" },
-    { icono: "🔥", texto: "Playoffs", seccion: "playoffs" }
+    { icono: "🔥", texto: "Playoffs", seccion: "playoffs" },
+   
   ];
 
   return (

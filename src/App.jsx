@@ -12,6 +12,7 @@ import Goleadores from "./components/Goleadores/Goleadores";
 import EquipoDetalle from "./components/EquipoDetalle/EquipoDetalle";
 import MenuPrincipal from "./components/MenuPrincipal/MenuPrincipal";
 import Playoffs from "./components/Playoffs/Playoffs";
+import CargarResultado from "./components/CargarResultado/CargarResultado";
 
 import "./App.css";
 
@@ -47,6 +48,12 @@ function Inicio() {
       {seccion === "playoffs" && (
         <Panel titulo="🔥 Playoffs">
           <Playoffs />
+        </Panel>
+      )}
+
+      {seccion === "cargarResultado" && (
+        <Panel titulo="Cargar resultados">
+          <CargarResultado />
         </Panel>
       )}
     </main>

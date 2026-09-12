@@ -1,0 +1,46 @@
+.cargar-resultado {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.resultado-partido {
+  padding: 20px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.resultado-partido h3 {
+  margin-top: 0;
+}
+
+.resultado-goles {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.resultado-goles label,
+.resultado-partido > label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.resultado-partido input,
+.resultado-partido select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.resultado-partido button {
+  margin-top: 15px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}

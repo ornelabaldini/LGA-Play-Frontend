@@ -1,32 +1,6 @@
 ﻿import { useEffect, useState } from "react";
 import "./Goleadores.css";
-
-const goleadoresPrueba = [
-  {
-    id: 1,
-    name: "Jugador A",
-    position: "Delantero",
-    goals: 8,
-  },
-  {
-    id: 2,
-    name: "Jugador B",
-    position: "Delantero",
-    goals: 6,
-  },
-  {
-    id: 3,
-    name: "Jugador C",
-    position: "Mediocampista",
-    goals: 4,
-  },
-  {
-    id: 4,
-    name: "Jugador D",
-    position: "Delantero",
-    goals: 3,
-  },
-];
+import { goleadoresPrueba } from "../../data/goleadoresMock";
 
 function Goleadores() {
   const [goleadores, setGoleadores] = useState([]);
@@ -62,11 +36,8 @@ function Goleadores() {
         {goleadores.map((jugador, index) => (
           <article key={jugador.id} className="fila-goleador">
             <span>{index + 1}°</span>
-
             <strong>{jugador.name}</strong>
-
             <span>{jugador.position}</span>
-
             <b>{jugador.goals} goles</b>
           </article>
         ))}
