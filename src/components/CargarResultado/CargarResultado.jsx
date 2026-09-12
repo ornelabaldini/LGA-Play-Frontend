@@ -12,6 +12,7 @@ function CargarResultado() {
   const [error, setError] = useState("");
 
   const [resultados, setResultados] = useState({});
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(1);
 
   useEffect(() => {
     async function cargarDatos() {
@@ -77,15 +78,37 @@ function CargarResultado() {
     return <p>{error}</p>;
   }
 
+  const partidosDeLaFecha = partidos.filter(
+    (partido) => partido.matchday === Number(fechaSeleccionada)
+  );
+
   return (
     <section className="cargar-resultado">
-      <h2>Cargar resultados</h2>
 
-      {partidos.map((partido) => {
-        const resultado = resultados[partido.id] || {};
+      <div className="selector-fecha">
+        <label htmlFor="fecha">Fecha</label>
+
+        <select
+          id="fecha"
+          value={fechaSeleccionada}
+          onChange={(e) => setFechaSeleccionada(e.target.value)}
+        >
+          {Array.from({ length: 22 }, (_, i) => (
+            <option key={i + 1} value={i + 1}>
+              Fecha {i + 1}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {partidosDeLaFecha.map((partido) => {
+        const resultado = resultados[partido.id_match] || {};
 
         return (
-          <article className="resultado-partido" key={partido.id}>
+          <article
+            className="resultado-partido"
+            key={partido.id_match}
+          >
             <h3>
               {partido.teamAName} vs {partido.teamBName}
             </h3>
@@ -99,7 +122,7 @@ function CargarResultado() {
                   value={resultado.golesLocal || ""}
                   onChange={(e) =>
                     actualizarCampo(
-                      partido.id,
+                      partido.id_match,
                       "golesLocal",
                       e.target.value
                     )
@@ -117,7 +140,7 @@ function CargarResultado() {
                   value={resultado.golesVisitante || ""}
                   onChange={(e) =>
                     actualizarCampo(
-                      partido.id,
+                      partido.id_match,
                       "golesVisitante",
                       e.target.value
                     )
@@ -132,7 +155,7 @@ function CargarResultado() {
                 onChange={(e) => {
                   if (!e.target.value) return;
 
-                  actualizarCampo(partido.id, "goleadores", [
+                  actualizarCampo(partido.id_match, "goleadores", [
                     ...(resultado.goleadores || []),
                     Number(e.target.value),
                   ]);
@@ -156,7 +179,7 @@ function CargarResultado() {
                 onChange={(e) => {
                   if (!e.target.value) return;
 
-                  actualizarCampo(partido.id, "amarillas", [
+                  actualizarCampo(partido.id_match, "amarillas", [
                     ...(resultado.amarillas || []),
                     Number(e.target.value),
                   ]);
@@ -180,7 +203,7 @@ function CargarResultado() {
                 onChange={(e) => {
                   if (!e.target.value) return;
 
-                  actualizarCampo(partido.id, "rojas", [
+                  actualizarCampo(partido.id_match, "rojas", [
                     ...(resultado.rojas || []),
                     Number(e.target.value),
                   ]);
@@ -198,7 +221,9 @@ function CargarResultado() {
               </select>
             </label>
 
-            <button onClick={() => guardarResultado(partido.id)}>
+            <button
+              onClick={() => guardarResultado(partido.id_match)}
+            >
               Guardar resultado
             </button>
           </article>
