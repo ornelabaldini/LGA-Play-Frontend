@@ -11,6 +11,7 @@ import Partidos from "./components/Partidos/Partidos";
 import Goleadores from "./components/Goleadores/Goleadores";
 import EquipoDetalle from "./components/EquipoDetalle/EquipoDetalle";
 import MenuPrincipal from "./components/MenuPrincipal/MenuPrincipal";
+import Playoffs from "./components/Playoffs/Playoffs";
 
 import "./App.css";
 
@@ -22,24 +23,8 @@ function Inicio() {
       <Hero />
 
       <SelectorTemporada />
+        <MenuPrincipal seccion={seccion} setSeccion={setSeccion} />
 
-      <nav className="menu">
-        <button onClick={() => setSeccion("tabla")}>
-          🏆 Tabla de posiciones
-        </button>
-
-        <button onClick={() => setSeccion("partidos")}>
-          📅 Fixture y resultados
-        </button>
-
-        <button onClick={() => setSeccion("goleadores")}>
-          👟 Goleadores
-        </button>
-
-        <button onClick={() => setSeccion("playoffs")}>
-          🔥 Playoffs
-        </button>
-      </nav>
 
       {seccion === "tabla" && (
         <Panel titulo="🏆 Tabla de posiciones">
@@ -61,7 +46,7 @@ function Inicio() {
 
       {seccion === "playoffs" && (
         <Panel titulo="🔥 Playoffs">
-          <p>Acá aparecerá el cuadro de playoffs.</p>
+          <Playoffs />
         </Panel>
       )}
     </main>

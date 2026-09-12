@@ -1,4 +1,4 @@
-.goleadores {
+﻿.goleadores {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px;
+  padding: 18px;
   border: 1px solid #ead28c;
   border-left: 5px solid #d4af37;
   border-radius: 12px;
@@ -16,7 +16,7 @@
 }
 
 .botin-oro > span {
-  font-size: 28px;
+  font-size: 30px;
 }
 
 .botin-oro div {
@@ -24,14 +24,14 @@
 }
 
 .botin-oro p {
-  margin: 0 0 3px;
+  margin: 0 0 4px;
   color: #9a7400;
   font-size: 12px;
   font-weight: 800;
 }
 
 .botin-oro strong {
-  font-size: 17px;
+  font-size: 18px;
 }
 
 .botin-oro b {
@@ -49,10 +49,11 @@
   grid-template-columns: 34px 1fr auto auto;
   align-items: center;
   gap: 12px;
-  padding: 13px;
+  padding: 14px;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   background: var(--blanco);
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
 }
 
 .fila-goleador > span:first-child {
@@ -71,6 +72,14 @@
 }
 
 @media (max-width: 500px) {
+  .botin-oro {
+    padding: 14px;
+  }
+
+  .botin-oro b {
+    font-size: 14px;
+  }
+
   .fila-goleador {
     grid-template-columns: 30px 1fr auto;
     gap: 8px;

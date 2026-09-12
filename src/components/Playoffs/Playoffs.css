@@ -1,0 +1,57 @@
+﻿.playoffs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 10px;
+}
+
+.playoffs__ronda {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.playoffs__ronda h3 {
+  margin: 0;
+  color: var(--verde-oscuro);
+  font-size: 18px;
+}
+
+.partido-playoff {
+  padding: 14px;
+  background: var(--blanco);
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: var(--sombra);
+}
+
+.partido-playoff div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.partido-playoff div + div {
+  border-top: 1px solid #e5e7eb;
+}
+
+.partido-playoff strong {
+  color: var(--verde-oscuro);
+  font-size: 18px;
+}
+
+.playoffs__final {
+  justify-content: center;
+}
+
+@media (max-width: 700px) {
+  .playoffs {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .playoffs__final {
+    justify-content: flex-start;
+  }
+}
