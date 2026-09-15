@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import "./CargarResultado.css";
+import "./CargarFecha.css";
 
 import { getMatchesWithTeams } from "../../services/matchsService";
 import { getPlayers } from "../../services/playersService";
 import { actualizarResultado } from "../../services/resultadosService";
 
-function CargarResultado() {
+function CargarFecha() {
   const [partidos, setPartidos] = useState([]);
   const [jugadores, setJugadores] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -233,4 +233,4 @@ function CargarResultado() {
   );
 }
 
-export default CargarResultado;
+export default CargarFecha;

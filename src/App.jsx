@@ -12,7 +12,7 @@ import Goleadores from "./components/Goleadores/Goleadores";
 import EquipoDetalle from "./components/EquipoDetalle/EquipoDetalle";
 import MenuPrincipal from "./components/MenuPrincipal/MenuPrincipal";
 import Playoffs from "./components/Playoffs/Playoffs";
-import CargarResultado from "./components/CargarResultado/CargarResultado";
+import CargarFecha from "./components/CargarFecha/CargarFecha";
 
 import "./App.css";
 
@@ -51,9 +51,9 @@ function Inicio() {
         </Panel>
       )}
 
-      {seccion === "cargarResultado" && (
-        <Panel titulo="Cargar resultados">
-          <CargarResultado />
+      {seccion === "cargarFecha" && (
+        <Panel titulo="Cargar Fecha">
+          <CargarFecha />
         </Panel>
       )}
     </main>
