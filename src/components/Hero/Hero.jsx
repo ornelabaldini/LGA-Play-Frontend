@@ -1,48 +1,51 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { getTeams } from "../../services/teamsService";
 import "./Hero.css";
 
+function ordenarEquipos(equipos) {
+  return [...equipos].sort((a, b) => {
+    if (b.points !== a.points) {
+      return b.points - a.points;
+    }
+
+    if (b.goalDifference !== a.goalDifference) {
+      return b.goalDifference - a.goalDifference;
+    }
+
+    return b.wins - a.wins;
+  });
+}
+
 function Hero() {
-  const [equipos, setEquipos] = useState([]);
-  const [cargando, setCargando] = useState(true);
+  const [primerPuesto, setPrimerPuesto] = useState(null);
 
   useEffect(() => {
     getTeams()
       .then((data) => {
-        const topTres = [...data]
-          .sort((a, b) => {
-            if (b.points !== a.points) return b.points - a.points;
-            return b.goalDifference - a.goalDifference;
-          })
-          .slice(0, 3);
-
-        setEquipos(topTres);
+        const equiposOrdenados = ordenarEquipos(data);
+        setPrimerPuesto(equiposOrdenados[0] ?? null);
       })
-      .finally(() => {
-        setCargando(false);
+      .catch((err) => {
+        console.error(err);
       });
   }, []);
 
-  if (cargando) {
-    return <p className="resumen-cargando">Cargando posiciones...</p>;
-  }
-
   return (
     <section className="hero">
-      <h2>🏆 Podio</h2>
+      <h2>Finalísima</h2>
 
-      <div className="podio">
-        {equipos.map((equipo, index) => (
-          <article className="podio-equipo" key={equipo.id_team}>
-            <span className="podio-puesto">{index + 1}°</span>
+      <div className="finalisima">
+        <article className="finalisima__equipo">
+          <span>1.º puesto</span>
+          <strong>
+            {primerPuesto ? primerPuesto.name : "Cargando..."}
+          </strong>
+        </article>
 
-            <strong>{equipo.name}</strong>
-
-            <span className="podio-puntos">
-              {equipo.points} pts
-            </span>
-          </article>
-        ))}
+        <article className="finalisima__equipo">
+          <span>Playoffs</span>
+          <strong>Por definir</strong>
+        </article>
       </div>
     </section>
   );

@@ -25,4 +25,34 @@
 .fecha-fixture__lista {
   display: grid;
   gap: 10px;
+}.filtro-fecha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.filtro-fecha label {
+  font-weight: 800;
+  color: var(--negro);
+}
+
+.filtro-fecha select {
+  padding: 9px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  background: white;
+  font-weight: 700;
+  color: var(--negro);
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .filtro-fecha {
+    width: 100%;
+  }
+
+  .filtro-fecha select {
+    flex: 1;
+  }
 }

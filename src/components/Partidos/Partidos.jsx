@@ -3,22 +3,9 @@ import { getMatchesWithTeams } from "../../services/matchsService";
 import TarjetaPartido from "../TarjetaPartido/TarjetaPartido";
 import "./Partidos.css";
 
-function agruparPorFecha(partidos) {
-  return partidos.reduce((fechas, partido) => {
-    const fecha = partido.matchday;
-
-    if (!fechas[fecha]) {
-      fechas[fecha] = [];
-    }
-
-    fechas[fecha].push(partido);
-
-    return fechas;
-  }, {});
-}
-
 function Partidos() {
   const [partidos, setPartidos] = useState([]);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState("todas");
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
 
@@ -43,11 +30,47 @@ function Partidos() {
     return <p>Error al cargar los partidos: {error}</p>;
   }
 
-  const partidosPorFecha = agruparPorFecha(partidos);
+  const partidosFiltrados =
+    fechaSeleccionada === "todas"
+      ? partidos
+      : partidos.filter(
+          (partido) =>
+            partido.matchday === Number(fechaSeleccionada)
+        );
+
+  const fechas = partidosFiltrados.reduce((resultado, partido) => {
+    const fecha = partido.matchday;
+
+    if (!resultado[fecha]) {
+      resultado[fecha] = [];
+    }
+
+    resultado[fecha].push(partido);
+
+    return resultado;
+  }, {});
 
   return (
     <div className="partidos">
-      {Object.entries(partidosPorFecha).map(
+      <div className="filtro-fecha">
+        <label htmlFor="fecha-partidos">Fecha</label>
+
+        <select
+          id="fecha-partidos"
+          value={fechaSeleccionada}
+          onChange={(e) => setFechaSeleccionada(e.target.value)}
+        >
+          <option value="todas">Todas las fechas</option>
+
+          {Array.from({ length: 22 }, (_, index) => (
+            <option key={index + 1} value={index + 1}>
+              Fecha {index + 1}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {Object.entries(fechas).map(
         ([fecha, partidosDeFecha]) => {
           const jugados = partidosDeFecha.filter(
             (partido) => partido.jugado

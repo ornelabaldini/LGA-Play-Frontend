@@ -4,83 +4,52 @@
 }
 
 .hero h2 {
-  margin: -15px 0 10px;
+  margin: 0 0 8px;
   color: var(--negro);
-  font-size: 19px;
-  text-shadow: none;
-}
-
-.podio {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.podio-equipo {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 12px;
-  border-left: 4px solid;
-  border-radius: 10px;
-  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.08);
-}
-
-.podio-puesto {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 900;
 }
 
-.podio-equipo strong {
-  flex: 1;
-  font-size: 14px;
+.finalisima {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
-.podio-puntos {
-  font-size: 13px;
-  font-weight: 800;
+.finalisima__equipo {
+  min-height: 75px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #ffffff, #f5f7f9);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
 }
 
-/* Primer puesto */
-.podio-equipo:nth-child(1) {
-  background: #fff8dc;
-  border-left-color: #d4af37;
+.finalisima__equipo span {
+  margin-bottom: 4px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.podio-equipo:nth-child(1) .podio-puesto,
-.podio-equipo:nth-child(1) .podio-puntos {
-  color: #9a7400;
-}
-
-/* Plata */
-.podio-equipo:nth-child(2) {
-  background: #f8fafc;
-  border-left-color: #cbd5e1;
-}
-
-.podio-equipo:nth-child(2) .podio-puesto,
-.podio-equipo:nth-child(2) .podio-puntos {
-  color: #64748b;
-}
-
-/* Bronce */
-.podio-equipo:nth-child(3) {
-  background: #fdf8f4;
-  border-left-color: #d6b08b;
-}
-
-.podio-equipo:nth-child(3) .podio-puesto,
-.podio-equipo:nth-child(3) .podio-puntos {
-  color: #9a6a42;
-}
-
-.resumen-cargando {
-  margin: 0 0 18px;
-  color: #4b5563;
+.finalisima__equipo strong {
+  color: var(--negro);
+  font-size: 16px;
+  font-weight: 900;
 }
 
 @media (max-width: 700px) {
-  .podio {
+  .finalisima {
     grid-template-columns: 1fr;
+  }
+
+  .finalisima__equipo {
+    min-height: 65px;
   }
 }

@@ -1,46 +1,85 @@
 .tabla-container {
   width: 100%;
-  overflow-x: auto;
   padding: 3px 0 24px;
+  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 .tabla-posiciones {
   width: 100%;
   min-width: 720px;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   background: white;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
 }
 
 .tabla-posiciones th {
   background: #111827;
   color: white;
-  padding: 14px 10px;
+  padding: 13px 10px;
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.tabla-posiciones th:nth-child(2) {
+  text-align: left;
 }
 
 .tabla-posiciones td {
-  padding: 14px 10px;
+  padding: 13px 10px;
   text-align: center;
-  border-bottom: 1px solid #eee;
-  font-size: 15px;
+  border-bottom: 1px solid #edf0f2;
+  font-size: 14px;
+  background: white;
 }
 
 .tabla-posiciones td:nth-child(2) {
   text-align: left;
-  font-weight: 600;
 }
 
-.tabla-posiciones tbody tr:hover {
-  background: #f3f4f6;
+.tabla-posiciones tbody tr:last-child td {
+  border-bottom: none;
 }
 
-.tabla-posiciones tbody tr:first-child {
-  background: #fef3c7;
-  font-weight: bold;
+.tabla-posiciones tbody tr:hover td {
+  background: #f8faf9;
+}
+
+.tabla-posiciones td.puntos {
+  font-weight: 900;
+  font-size: 15px;
+}
+
+.tabla-posiciones tbody tr:first-child td:first-child,
+.tabla-posiciones tbody tr:first-child td:nth-child(2) {
+  background: rgba(134, 239, 172, 0.45);
+}
+
+.tabla-posiciones tbody tr:first-child td:first-child {
+  box-shadow: inset 5px 0 0 #16a34a;
+}
+
+.tabla-posiciones tbody tr:nth-child(n+2):nth-child(-n+9) td:first-child,
+.tabla-posiciones tbody tr:nth-child(n+2):nth-child(-n+9) td:nth-child(2) {
+  background: rgba(220, 252, 231, 0.55);
+}
+
+.tabla-posiciones tbody tr:nth-child(n+2):nth-child(-n+9) td:first-child {
+  box-shadow: inset 5px 0 0 #22c55e;
+}
+
+.posicion-numero {
+  display: inline-block;
+  font-weight: 900;
+}
+
+.nombre-equipo {
+  display: inline-block;
+  font-weight: 800;
 }
 
 .equipo-enlace {
@@ -55,21 +94,124 @@
   color: var(--verde-cancha);
 }
 
+.clasificado-playoffs .posicion-numero,
+.clasificado-playoffs .nombre-equipo {
+  color: var(--verde-oscuro);
+}
+
 .tabla-mobile {
   display: none;
 }
 
 @media (max-width: 700px) {
   .tabla-container {
-    overflow-x: visible;
+    overflow-x: auto;
+    padding-bottom: 18px;
   }
 
   .tabla-posiciones {
-    display: none;
+    display: table;
+    min-width: 720px;
   }
 
-  .tabla-mobile {
-    display: grid;
-    gap: 10px;
+  .tabla-posiciones th {
+    padding: 11px 8px;
+    font-size: 12px;
+  }
+
+  .tabla-posiciones td {
+    padding: 11px 8px;
+    font-size: 13px;
+  }
+
+  .tabla-posiciones td.puntos {
+    font-size: 14px;
+  }
+
+  .equipo-enlace {
+    gap: 7px;
+  }
+}
+/* =========================
+   TABLA RESPONSIVE
+   ========================= */
+
+@media (max-width: 700px) {
+  .tabla-container {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .tabla-posiciones {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .tabla-posiciones th,
+  .tabla-posiciones td {
+    padding: 9px 3px;
+    font-size: 10px;
+  }
+
+  .tabla-posiciones th {
+    font-size: 9px;
+  }
+
+  .tabla-posiciones th:nth-child(1),
+  .tabla-posiciones td:nth-child(1) {
+    width: 7%;
+  }
+
+  .tabla-posiciones th:nth-child(2),
+  .tabla-posiciones td:nth-child(2) {
+    width: 28%;
+  }
+
+  .tabla-posiciones th:nth-child(n+3),
+  .tabla-posiciones td:nth-child(n+3) {
+    width: 8.125%;
+  }
+
+  .equipo-enlace {
+    gap: 5px;
+    min-width: 0;
+    align-items: center;
+  }
+
+  .nombre-equipo {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.15;
+    font-size: 10px;
+  }
+
+  .tabla-posiciones td.puntos {
+    font-size: 11px;
+  }
+
+  .posicion-numero {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .tabla-posiciones th,
+  .tabla-posiciones td {
+    padding: 8px 2px;
+    font-size: 9px;
+  }
+
+  .tabla-posiciones th {
+    font-size: 8px;
+  }
+
+  .nombre-equipo {
+    font-size: 9px;
+  }
+
+  .tabla-posiciones td.puntos {
+    font-size: 10px;
   }
 }

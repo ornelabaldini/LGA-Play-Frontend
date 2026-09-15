@@ -1,57 +1,273 @@
-﻿.playoffs {
+.playoffs {
+  width: 100%;
+}
+
+.playoffs__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.playoffs__encabezado h2 {
+  margin: 0;
+  color: var(--negro);
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.playoffs__encabezado p {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.playoffs__badge {
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: #ecfdf5;
+  color: var(--verde-oscuro);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+/* CUADRO */
+
+.playoffs__cuadro {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  padding: 10px;
+  grid-template-columns: 1.4fr 1.25fr 1.1fr 1.1fr;
+  gap: 38px;
+  min-height: 520px;
+  padding: 8px 6px 25px;
 }
 
 .playoffs__ronda {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 14px;
 }
 
 .playoffs__ronda h3 {
-  margin: 0;
-  color: var(--verde-oscuro);
-  font-size: 18px;
+  margin: 0 0 16px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  color: white;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
 }
 
-.partido-playoff {
-  padding: 14px;
-  background: var(--blanco);
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  box-shadow: var(--sombra);
+/* Colores de cada ronda */
+
+.ronda-primera h3 {
+  background: #16a34a;
 }
 
-.partido-playoff div {
+.ronda-cuartos h3 {
+  background: #f59e0b;
+}
+
+.ronda-semifinal h3 {
+  background: #e879f9;
+}
+
+.ronda-final h3 {
+  background: #2563eb;
+}
+
+/* Partidos */
+
+.ronda__partidos {
+  flex: 1;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
-.partido-playoff div + div {
+.llave-partido {
+  position: relative;
+  background: white;
+  border: 2px solid #d1d5db;
+  border-radius: 9px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  z-index: 2;
+}
+
+.llave-equipo {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 9px;
+  color: #111827;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.llave-equipo + .llave-equipo {
   border-top: 1px solid #e5e7eb;
 }
 
-.partido-playoff strong {
+.llave-equipo strong {
+  min-width: 16px;
   color: var(--verde-oscuro);
-  font-size: 18px;
+  text-align: center;
 }
 
-.playoffs__final {
-  justify-content: center;
+/* Conectores horizontales */
+
+.ronda-primera .llave-partido::after,
+.ronda-cuartos .llave-partido::after,
+.ronda-semifinal .llave-partido::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -39px;
+  width: 39px;
+  border-top: 2px solid #9ca3af;
 }
+
+/* Conectores de entrada */
+
+.ronda-cuartos .llave-partido::before,
+.ronda-semifinal .llave-partido::before,
+.ronda-final .llave-partido::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -39px;
+  width: 39px;
+  border-top: 2px solid #9ca3af;
+}
+
+/* Primera ronda */
+
+.ronda-primera .ronda__partidos {
+  gap: 18px;
+}
+
+/* Cuartos: los partidos quedan enfrentados a dos partidos de primera ronda */
+
+.ronda-cuartos .ronda__partidos {
+  justify-content: space-around;
+  padding: 48px 0;
+}
+
+/* Semifinal */
+
+.ronda-semifinal .ronda__partidos {
+  justify-content: center;
+  padding: 120px 0;
+}
+
+/* Final */
+
+.ronda-final .ronda__partidos {
+  justify-content: center;
+  padding: 170px 0;
+}
+
+.ronda-final .llave-partido {
+  border: 3px solid #2563eb;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.18);
+}
+
+.ronda-semifinal .llave-partido {
+  border-color: #e879f9;
+}
+
+/* Conectores verticales */
+
+.ronda-primera .llave-partido:nth-child(2)::before,
+.ronda-primera .llave-partido:nth-child(4)::before {
+  content: "";
+  position: absolute;
+  right: -20px;
+  top: -19px;
+  width: 2px;
+  height: 19px;
+  background: #9ca3af;
+}
+
+.ronda-cuartos .llave-partido:nth-child(2)::before {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: -105px;
+  width: 2px;
+  height: 105px;
+  background: #9ca3af;
+}
+
+.ronda-semifinal .llave-partido::before {
+  left: -39px;
+}
+
+/* MOBILE */
 
 @media (max-width: 700px) {
-  .playoffs {
-    grid-template-columns: 1fr;
-    gap: 24px;
+  .playoffs__encabezado {
+    align-items: flex-start;
   }
 
-  .playoffs__final {
-    justify-content: flex-start;
+  .playoffs__encabezado h2 {
+    font-size: 21px;
+  }
+
+  .playoffs__badge {
+    font-size: 10px;
+    padding: 6px 9px;
+  }
+
+  .playoffs__cuadro {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: auto;
+    padding: 0;
+  }
+
+  .playoffs__ronda {
+    width: 100%;
+  }
+
+  .playoffs__ronda h3 {
+    margin-bottom: 10px;
+  }
+
+  .ronda__partidos {
+    gap: 10px !important;
+    padding: 0 !important;
+  }
+
+  .llave-partido {
+    width: 100%;
+  }
+
+  .llave-equipo {
+    min-height: 34px;
+    font-size: 12px;
+  }
+
+  /* En móvil usamos flechas entre rondas */
+  .playoffs__ronda:not(:last-child)::after {
+    content: "↓";
+    display: block;
+    margin: 8px auto 0;
+    color: var(--verde-oscuro);
+    font-size: 22px;
+    font-weight: 900;
+  }
+
+  .llave-partido::before,
+  .llave-partido::after {
+    display: none !important;
+  }
+
+  .ronda-final .llave-partido {
+    border-width: 3px;
   }
 }
