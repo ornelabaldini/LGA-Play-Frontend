@@ -1,125 +1,549 @@
 import { useEffect, useState } from "react";
-import "./CargarFecha.css";
-
 import { getMatchesWithTeams } from "../../services/matchsService";
 import { getPlayers } from "../../services/playersService";
 import { actualizarResultado } from "../../services/resultadosService";
+import "./CargarFecha.css";
+
+const MODO_PRUEBA = true;
+
+const jugadoresPruebaLocal = [
+  { id: 1001, name: "Juan Pérez" },
+  { id: 1002, name: "Matías Gómez" },
+  { id: 1003, name: "Pablo López" },
+];
+
+const jugadoresPruebaVisitante = [
+  { id: 1004, name: "Lucas Díaz" },
+  { id: 1005, name: "Martín Ruiz" },
+  { id: 1006, name: "Diego Fernández" },
+];
 
 function CargarFecha() {
   const [partidos, setPartidos] = useState([]);
   const [jugadores, setJugadores] = useState([]);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState("");
-
+  const [fechaSeleccionada, setFechaSeleccionada] = useState("");
   const [resultados, setResultados] = useState({});
-  const [fechaSeleccionada, setFechaSeleccionada] = useState(1);
+  const [erroresGuardado, setErroresGuardado] = useState({});
 
   useEffect(() => {
-    async function cargarDatos() {
-      try {
-        const [partidosData, jugadoresData] = await Promise.all([
-          getMatchesWithTeams(),
-          getPlayers(),
-        ]);
-
-        setPartidos(partidosData);
-        setJugadores(jugadoresData);
-      } catch (err) {
-        console.error(err);
-        setError("No se pudieron cargar los datos.");
-      } finally {
-        setCargando(false);
-      }
-    }
-
     cargarDatos();
   }, []);
 
+  async function cargarDatos() {
+    try {
+      const [partidosData, jugadoresData] = await Promise.all([
+        getMatchesWithTeams(),
+        getPlayers(),
+      ]);
+
+      setPartidos(partidosData);
+      setJugadores(jugadoresData);
+    } catch (error) {
+      console.error("Error cargando datos:", error);
+    }
+  }
+
+  const fechasDisponibles = [
+    ...new Set(partidos.map((partido) => partido.matchday)),
+  ];
+
   function actualizarCampo(partidoId, campo, valor) {
-    setResultados((prev) => ({
-      ...prev,
-      [partidoId]: {
-        ...prev[partidoId],
+    setResultados((prev) => {
+      const resultadoActual = prev[partidoId] || {};
+
+      const nuevoResultado = {
+        ...resultadoActual,
         [campo]: valor,
-      },
+      };
+
+      if (campo === "golesLocal") {
+        const cantidadGoles = Number(valor || 0);
+        const goleadores =
+          resultadoActual.goleadoresLocal || [];
+
+        nuevoResultado.goleadoresLocal =
+          goleadores.slice(0, cantidadGoles);
+      }
+
+      if (campo === "golesVisitante") {
+        const cantidadGoles = Number(valor || 0);
+        const goleadores =
+          resultadoActual.goleadoresVisitante || [];
+
+        nuevoResultado.goleadoresVisitante =
+          goleadores.slice(0, cantidadGoles);
+      }
+
+      return {
+        ...prev,
+        [partidoId]: nuevoResultado,
+      };
+    });
+
+    setErroresGuardado((prev) => ({
+      ...prev,
+      [partidoId]: "",
     }));
   }
 
-  async function guardarResultado(partidoId) {
-    const resultado = resultados[partidoId];
+  function agregarEvento(partidoId, campo, jugadorId) {
+    if (!jugadorId) return;
 
-    if (!resultado) {
-      alert("Completá el resultado.");
+    setResultados((prev) => {
+      const resultadoActual = prev[partidoId] || {};
+      const eventosActuales = resultadoActual[campo] || [];
+
+      if (
+        campo === "goleadoresLocal" ||
+        campo === "goleadoresVisitante"
+      ) {
+        const cantidadMaxima =
+          campo === "goleadoresLocal"
+            ? Number(resultadoActual.golesLocal || 0)
+            : Number(resultadoActual.golesVisitante || 0);
+
+        if (eventosActuales.length >= cantidadMaxima) {
+          return prev;
+        }
+      }
+
+      return {
+        ...prev,
+        [partidoId]: {
+          ...resultadoActual,
+          [campo]: [
+            ...eventosActuales,
+            Number(jugadorId),
+          ],
+        },
+      };
+    });
+
+    setErroresGuardado((prev) => ({
+      ...prev,
+      [partidoId]: "",
+    }));
+  }
+
+  function eliminarEvento(partidoId, campo, indice) {
+    setResultados((prev) => {
+      const resultadoActual = prev[partidoId] || {};
+      const eventosActuales = resultadoActual[campo] || [];
+
+      return {
+        ...prev,
+        [partidoId]: {
+          ...resultadoActual,
+          [campo]: eventosActuales.filter(
+            (_, i) => i !== indice
+          ),
+        },
+      };
+    });
+
+    setErroresGuardado((prev) => ({
+      ...prev,
+      [partidoId]: "",
+    }));
+  }
+
+  function obtenerNombreJugador(jugadorId) {
+    const jugador = jugadores.find(
+      (j) => Number(j.id) === Number(jugadorId)
+    );
+
+    if (jugador) {
+      return jugador.name;
+    }
+
+    const jugadorPrueba = [
+      ...jugadoresPruebaLocal,
+      ...jugadoresPruebaVisitante,
+    ].find(
+      (j) => Number(j.id) === Number(jugadorId)
+    );
+
+    return jugadorPrueba?.name || `Jugador ${jugadorId}`;
+  }
+
+  function obtenerJugadoresEquipo(teamId, lado) {
+    if (MODO_PRUEBA) {
+      return lado === "local"
+        ? jugadoresPruebaLocal
+        : jugadoresPruebaVisitante;
+    }
+
+    return jugadores.filter(
+      (jugador) =>
+        Number(jugador.team_id) === Number(teamId)
+    );
+  }
+
+  function contarGoleadores(goleadores) {
+    const conteo = {};
+
+    goleadores.forEach((jugadorId) => {
+      conteo[jugadorId] =
+        (conteo[jugadorId] || 0) + 1;
+    });
+
+    return conteo;
+  }
+
+  function cargarEjemplo(partido) {
+    const resultadoEjemplo = {
+      golesLocal: 2,
+      golesVisitante: 1,
+      goleadoresLocal: [1001, 1001],
+      goleadoresVisitante: [1004],
+      amarillasLocal: [1002],
+      amarillasVisitante: [1005],
+      rojasLocal: [],
+      rojasVisitante: [],
+    };
+
+    setResultados((prev) => ({
+      ...prev,
+      [partido.id_match]: resultadoEjemplo,
+    }));
+
+    setErroresGuardado((prev) => ({
+      ...prev,
+      [partido.id_match]: "",
+    }));
+  }
+
+  async function guardarResultado(partido) {
+    const partidoId = partido.id_match;
+    const resultado = resultados[partidoId] || {};
+
+    const golesLocal = Number(resultado.golesLocal || 0);
+    const golesVisitante = Number(
+      resultado.golesVisitante || 0
+    );
+
+    const goleadoresLocal =
+      resultado.goleadoresLocal || [];
+
+    const goleadoresVisitante =
+      resultado.goleadoresVisitante || [];
+
+    if (goleadoresLocal.length !== golesLocal) {
+      setErroresGuardado((prev) => ({
+        ...prev,
+        [partidoId]:
+          `El equipo local tiene ${golesLocal} gol(es), pero cargaste ${goleadoresLocal.length} goleador(es).`,
+      }));
+      return;
+    }
+
+    if (goleadoresVisitante.length !== golesVisitante) {
+      setErroresGuardado((prev) => ({
+        ...prev,
+        [partidoId]:
+          `El equipo visitante tiene ${golesVisitante} gol(es), pero cargaste ${goleadoresVisitante.length} goleador(es).`,
+      }));
       return;
     }
 
     try {
+      setErroresGuardado((prev) => ({
+        ...prev,
+        [partidoId]: "",
+      }));
+
       await actualizarResultado({
         partidoId,
-        golesLocal: Number(resultado.golesLocal || 0),
-        golesVisitante: Number(resultado.golesVisitante || 0),
-        goleadores: resultado.goleadores || [],
-        amarillas: resultado.amarillas || [],
-        rojas: resultado.rojas || [],
+        golesLocal,
+        golesVisitante,
+        goleadores: [
+          ...goleadoresLocal,
+          ...goleadoresVisitante,
+        ],
+        amarillasLocal:
+          resultado.amarillasLocal || [],
+        amarillasVisitante:
+          resultado.amarillasVisitante || [],
+        rojasLocal:
+          resultado.rojasLocal || [],
+        rojasVisitante:
+          resultado.rojasVisitante || [],
       });
 
-      alert("Resultado guardado correctamente.");
-    } catch (err) {
-      console.error(err);
-      alert("No se pudo guardar el resultado.");
+      setErroresGuardado((prev) => ({
+        ...prev,
+        [partidoId]:
+          "Resultado guardado correctamente.",
+      }));
+    } catch (error) {
+      console.error("Error guardando resultado:", error);
+
+      setErroresGuardado((prev) => ({
+        ...prev,
+        [partidoId]:
+          "No se pudo guardar el resultado. El endpoint del backend todavía no está disponible.",
+      }));
     }
   }
 
-  if (cargando) {
-    return <p>Cargando partidos...</p>;
+  function renderGoleadores(
+    partidoId,
+    jugadoresEquipo,
+    goleadores,
+    campo
+  ) {
+    const conteo =
+      contarGoleadores(goleadores);
+
+    const resultado =
+      resultados[partidoId] || {};
+
+    const cantidadGoles =
+      campo === "goleadoresLocal"
+        ? Number(resultado.golesLocal || 0)
+        : Number(resultado.golesVisitante || 0);
+
+    const limiteAlcanzado =
+      goleadores.length >= cantidadGoles;
+
+    return (
+      <>
+        <select
+          value=""
+          disabled={
+            cantidadGoles === 0 ||
+            limiteAlcanzado
+          }
+          onChange={(e) =>
+            agregarEvento(
+              partidoId,
+              campo,
+              e.target.value
+            )
+          }
+        >
+          <option value="">
+            {cantidadGoles === 0
+              ? "Primero cargá los goles"
+              : limiteAlcanzado
+              ? "Máximo de goleadores alcanzado"
+              : "Seleccionar goleador"}
+          </option>
+
+          {jugadoresEquipo.map((jugador) => (
+            <option
+              key={jugador.id}
+              value={jugador.id}
+            >
+              {jugador.name}
+            </option>
+          ))}
+        </select>
+
+        <div className="contador-eventos">
+          {goleadores.length} / {cantidadGoles}
+        </div>
+
+        {goleadores.length > 0 && (
+          <div className="eventos-cargados">
+            {goleadores.map((jugadorId, indice) => (
+              <div
+                className="evento-item"
+                key={`${jugadorId}-${indice}`}
+              >
+                <span>
+                  {obtenerNombreJugador(jugadorId)}
+                  {conteo[jugadorId] > 1 &&
+                    ` (${conteo[jugadorId]})`}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    eliminarEvento(
+                      partidoId,
+                      campo,
+                      indice
+                    )
+                  }
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </>
+    );
   }
 
-  if (error) {
-    return <p>{error}</p>;
+  function renderTarjetas(
+    partidoId,
+    jugadoresEquipo,
+    eventos,
+    campo,
+    etiqueta
+  ) {
+    return (
+      <>
+        <div className="evento-titulo">
+          {etiqueta}
+        </div>
+
+        <select
+          value=""
+          onChange={(e) =>
+            agregarEvento(
+              partidoId,
+              campo,
+              e.target.value
+            )
+          }
+        >
+          <option value="">
+            Seleccionar jugador
+          </option>
+
+          {jugadoresEquipo.map((jugador) => (
+            <option
+              key={jugador.id}
+              value={jugador.id}
+            >
+              {jugador.name}
+            </option>
+          ))}
+        </select>
+
+        {eventos.length > 0 && (
+          <div className="eventos-cargados">
+            {eventos.map((jugadorId, indice) => (
+              <div
+                className="evento-item"
+                key={`${jugadorId}-${indice}`}
+              >
+                <span>
+                  {obtenerNombreJugador(jugadorId)}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    eliminarEvento(
+                      partidoId,
+                      campo,
+                      indice
+                    )
+                  }
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </>
+    );
   }
 
-  const partidosDeLaFecha = partidos.filter(
-    (partido) => partido.matchday === Number(fechaSeleccionada)
-  );
+  const partidosFiltrados = fechaSeleccionada
+    ? partidos.filter(
+        (partido) =>
+          String(partido.matchday) ===
+          String(fechaSeleccionada)
+      )
+    : [];
 
   return (
     <section className="cargar-resultado">
-
       <div className="selector-fecha">
-        <label htmlFor="fecha">Fecha</label>
+        <label htmlFor="fecha">
+          Seleccioná una fecha
+        </label>
 
         <select
           id="fecha"
           value={fechaSeleccionada}
-          onChange={(e) => setFechaSeleccionada(e.target.value)}
+          onChange={(e) =>
+            setFechaSeleccionada(e.target.value)
+          }
         >
-          {Array.from({ length: 22 }, (_, i) => (
-            <option key={i + 1} value={i + 1}>
-              Fecha {i + 1}
+          <option value="">
+            Seleccionar fecha
+          </option>
+
+          {fechasDisponibles.map((fecha) => (
+            <option
+              key={fecha}
+              value={fecha}
+            >
+              Fecha {fecha}
             </option>
           ))}
         </select>
       </div>
 
-      {partidosDeLaFecha.map((partido) => {
-        const resultado = resultados[partido.id_match] || {};
+      {MODO_PRUEBA && (
+        <div className="aviso-prueba">
+          🧪 Modo prueba activo: los jugadores son
+          de ejemplo.
+        </div>
+      )}
+
+      {partidosFiltrados.map((partido) => {
+        const resultado =
+          resultados[partido.id_match] || {};
+
+        const jugadoresLocal =
+          obtenerJugadoresEquipo(
+            partido.teamA_id,
+            "local"
+          );
+
+        const jugadoresVisitante =
+          obtenerJugadoresEquipo(
+            partido.teamB_id,
+            "visitante"
+          );
 
         return (
-          <article
+          <div
             className="resultado-partido"
             key={partido.id_match}
           >
-            <h3>
-              {partido.teamAName} vs {partido.teamBName}
-            </h3>
+            <div className="partido-encabezado">
+              <strong>
+                {partido.teamAName}
+              </strong>
+
+              <span>vs</span>
+
+              <strong>
+                {partido.teamBName}
+              </strong>
+            </div>
+
+            <button
+              type="button"
+              className="boton-ejemplo"
+              onClick={() =>
+                cargarEjemplo(partido)
+              }
+            >
+              🧪 Cargar ejemplo
+            </button>
 
             <div className="resultado-goles">
-              <label>
-                {partido.teamAName}
+              <div className="equipo-resultado">
+                <span>
+                  {partido.teamAName}
+                </span>
+
                 <input
                   type="number"
                   min="0"
-                  value={resultado.golesLocal || ""}
+                  value={
+                    resultado.golesLocal ?? ""
+                  }
                   onChange={(e) =>
                     actualizarCampo(
                       partido.id_match,
@@ -128,16 +552,23 @@ function CargarFecha() {
                     )
                   }
                 />
-              </label>
+              </div>
 
-              <span>-</span>
+              <div className="separador-goles">
+                -
+              </div>
 
-              <label>
-                {partido.teamBName}
+              <div className="equipo-resultado">
+                <span>
+                  {partido.teamBName}
+                </span>
+
                 <input
                   type="number"
                   min="0"
-                  value={resultado.golesVisitante || ""}
+                  value={
+                    resultado.golesVisitante ?? ""
+                  }
                   onChange={(e) =>
                     actualizarCampo(
                       partido.id_match,
@@ -146,87 +577,114 @@ function CargarFecha() {
                     )
                   }
                 />
-              </label>
+              </div>
             </div>
 
-            <label>
-              Goleadores
-              <select
-                onChange={(e) => {
-                  if (!e.target.value) return;
+            <div className="equipos-eventos">
+              <div className="equipo-columna">
+                <h3 className="equipo-columna__titulo">
+                  {partido.teamAName}
+                </h3>
 
-                  actualizarCampo(partido.id_match, "goleadores", [
-                    ...(resultado.goleadores || []),
-                    Number(e.target.value),
-                  ]);
+                <div className="eventos-seccion">
+                  <h4>⚽ Goleadores</h4>
 
-                  e.target.value = "";
-                }}
+                  {renderGoleadores(
+                    partido.id_match,
+                    jugadoresLocal,
+                    resultado.goleadoresLocal ||
+                      [],
+                    "goleadoresLocal"
+                  )}
+                </div>
+
+                <div className="eventos-seccion">
+                  {renderTarjetas(
+                    partido.id_match,
+                    jugadoresLocal,
+                    resultado.amarillasLocal ||
+                      [],
+                    "amarillasLocal",
+                    "🟨 Amarillas"
+                  )}
+                </div>
+
+                <div className="eventos-seccion">
+                  {renderTarjetas(
+                    partido.id_match,
+                    jugadoresLocal,
+                    resultado.rojasLocal || [],
+                    "rojasLocal",
+                    "🟥 Rojas"
+                  )}
+                </div>
+              </div>
+
+              <div className="equipo-columna">
+                <h3 className="equipo-columna__titulo">
+                  {partido.teamBName}
+                </h3>
+
+                <div className="eventos-seccion">
+                  <h4>⚽ Goleadores</h4>
+
+                  {renderGoleadores(
+                    partido.id_match,
+                    jugadoresVisitante,
+                    resultado.goleadoresVisitante ||
+                      [],
+                    "goleadoresVisitante"
+                  )}
+                </div>
+
+                <div className="eventos-seccion">
+                  {renderTarjetas(
+                    partido.id_match,
+                    jugadoresVisitante,
+                    resultado.amarillasVisitante ||
+                      [],
+                    "amarillasVisitante",
+                    "🟨 Amarillas"
+                  )}
+                </div>
+
+                <div className="eventos-seccion">
+                  {renderTarjetas(
+                    partido.id_match,
+                    jugadoresVisitante,
+                    resultado.rojasVisitante ||
+                      [],
+                    "rojasVisitante",
+                    "🟥 Rojas"
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {erroresGuardado[
+              partido.id_match
+            ] && (
+              <div
+                className="aviso-error"
+                role="alert"
               >
-                <option value="">Seleccionar jugador</option>
-
-                {jugadores.map((jugador) => (
-                  <option key={jugador.id} value={jugador.id}>
-                    {jugador.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label>
-              Amarillas
-              <select
-                onChange={(e) => {
-                  if (!e.target.value) return;
-
-                  actualizarCampo(partido.id_match, "amarillas", [
-                    ...(resultado.amarillas || []),
-                    Number(e.target.value),
-                  ]);
-
-                  e.target.value = "";
-                }}
-              >
-                <option value="">Seleccionar jugador</option>
-
-                {jugadores.map((jugador) => (
-                  <option key={jugador.id} value={jugador.id}>
-                    {jugador.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label>
-              Rojas
-              <select
-                onChange={(e) => {
-                  if (!e.target.value) return;
-
-                  actualizarCampo(partido.id_match, "rojas", [
-                    ...(resultado.rojas || []),
-                    Number(e.target.value),
-                  ]);
-
-                  e.target.value = "";
-                }}
-              >
-                <option value="">Seleccionar jugador</option>
-
-                {jugadores.map((jugador) => (
-                  <option key={jugador.id} value={jugador.id}>
-                    {jugador.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+                ⚠️{" "}
+                {erroresGuardado[
+                  partido.id_match
+                ]}
+              </div>
+            )}
 
             <button
-              onClick={() => guardarResultado(partido.id_match)}
+              type="button"
+              className="boton-guardar"
+              onClick={() =>
+                guardarResultado(partido)
+              }
             >
-              Guardar resultado
+              💾 Guardar resultado
             </button>
-          </article>
+          </div>
         );
       })}
     </section>
@@ -234,3 +692,4 @@ function CargarFecha() {
 }
 
 export default CargarFecha;
+

@@ -4,10 +4,6 @@
   gap: 20px;
 }
 
-.cargar-resultado h2 {
-  margin: 0;
-}
-
 .selector-fecha {
   display: flex;
   align-items: center;
@@ -25,78 +21,327 @@
 .selector-fecha select {
   padding: 9px 12px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #d1d5db;
   background: white;
   font-weight: 600;
 }
 
+.aviso-prueba {
+  padding: 11px 14px;
+  border: 1px solid #fde68a;
+  border-radius: 9px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* PARTIDO */
+
 .resultado-partido {
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 14px;
   background: #fff;
   box-shadow: var(--sombra);
 }
 
-.resultado-partido h3 {
-  margin-top: 0;
-  text-align: center;
-}
-
-.resultado-goles {
+.partido-encabezado {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 15px;
-  margin: 20px 0;
+  margin-bottom: 20px;
 }
 
-.resultado-goles label,
-.resultado-partido > label {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-weight: 700;
+.partido-encabezado h3 {
+  margin: 0;
+  font-size: 19px;
 }
 
-.resultado-partido input,
-.resultado-partido select {
-  padding: 9px;
-  border-radius: 7px;
-  border: 1px solid #ccc;
-  background: white;
+.partido-encabezado h3 span {
+  color: #6b7280;
+  font-weight: 600;
 }
 
-.resultado-goles input {
-  width: 70px;
-  text-align: center;
-}
-
-.resultado-partido button {
-  margin-top: 15px;
-  padding: 10px 16px;
-  border: none;
+.boton-ejemplo {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
   border-radius: 8px;
-  background: var(--verde-cancha);
-  color: white;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
 }
 
-.resultado-partido button:hover {
+.boton-ejemplo:hover {
+  background: #f3f4f6;
+}
+
+/* RESULTADO */
+
+.resultado-goles {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 18px;
+  max-width: 650px;
+  margin: 0 auto 25px;
+}
+
+.equipo-resultado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.equipo-resultado strong {
+  text-align: center;
+  font-size: 15px;
+}
+
+.equipo-resultado input {
+  width: 70px;
+  padding: 9px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.separador-goles {
+  font-size: 24px;
+  font-weight: 900;
+  color: #475569;
+}
+
+/* DOS EQUIPOS */
+
+.equipos-eventos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.equipo-columna {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.equipo-columna__titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.equipo-columna__titulo h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.equipo-columna__titulo span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* EVENTOS */
+
+.eventos-seccion {
+  margin-top: 12px;
+  padding: 13px;
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+  background: white;
+}
+
+.eventos-seccion:first-of-type {
+  margin-top: 0;
+}
+
+.eventos-seccion h5 {
+  margin: 0 0 10px;
+  font-size: 13px;
+}
+
+.eventos-seccion select {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: white;
+  font-size: 13px;
+}
+
+/* CONTADOR */
+
+.contador-eventos {
+  margin-top: 7px;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* EVENTOS CARGADOS */
+
+.eventos-cargados {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.evento-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 9px;
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+  background: #f8fafc;
+  font-size: 13px;
+}
+
+.evento-item span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.evento-item span strong {
+  color: #475569;
+}
+
+.evento-item button {
+  flex: 0 0 auto;
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.evento-item button:hover {
+  background: #fecaca;
+}
+
+/* GUARDAR */
+
+.boton-guardar {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--verde-cancha);
+  color: white;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.boton-guardar:hover {
   opacity: 0.9;
 }
 
-@media (max-width: 500px) {
-  .selector-fecha {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+/* CELULAR */
 
-  .resultado-goles {
-    gap: 8px;
-  }
-
+@media (max-width: 700px) {
   .resultado-partido {
     padding: 15px;
   }
+
+  .partido-encabezado {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .partido-encabezado h3 {
+    font-size: 17px;
+  }
+
+  .boton-ejemplo {
+    width: 100%;
+  }
+  
+  .selector-fecha {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .selector-fecha select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .resultado-goles {
+    gap: 10px;
+  }
+
+  .equipo-resultado strong {
+    font-size: 13px;
+  }
+
+  .equipo-resultado input {
+    width: 60px;
+    font-size: 18px;
+  }
+
+  .equipos-eventos {
+    grid-template-columns: 1fr;
+  }
+
+  .equipo-columna {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .resultado-goles {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .equipo-resultado strong {
+    font-size: 12px;
+  }
+
+  .separador-goles {
+    font-size: 20px;
+  }
+}
+
+.aviso-error {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+  font-weight: 600;
+  text-align: center;
 }
