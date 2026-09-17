@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Route, Routes } from "react-router-dom";
+﻿import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
@@ -16,7 +16,7 @@ import CargarFecha from "./components/CargarFecha/CargarFecha";
 
 import "./App.css";
 
-function Inicio() {
+function Inicio({ esAdmin }) {
   const [seccion, setSeccion] = useState("tabla");
 
   return (
@@ -24,8 +24,12 @@ function Inicio() {
       <Hero />
 
       <SelectorTemporada />
-        <MenuPrincipal seccion={seccion} setSeccion={setSeccion} />
 
+      <MenuPrincipal
+        seccion={seccion}
+        setSeccion={setSeccion}
+        esAdmin={esAdmin}
+      />
 
       {seccion === "tabla" && (
         <Panel titulo="🏆 Tabla de posiciones">
@@ -51,7 +55,7 @@ function Inicio() {
         </Panel>
       )}
 
-      {seccion === "cargarFecha" && (
+      {esAdmin && seccion === "cargarFecha" && (
         <Panel titulo="Cargar Fecha">
           <CargarFecha />
         </Panel>
@@ -61,13 +65,25 @@ function Inicio() {
 }
 
 function App() {
+  const [esAdmin, setEsAdmin] = useState(false);
+
   return (
     <div className="app">
-      <Header />
+      <Header
+        esAdmin={esAdmin}
+        setEsAdmin={setEsAdmin}
+      />
 
       <Routes>
-        <Route path="/" element={<Inicio />} />
-        <Route path="/equipos/:teamId" element={<EquipoDetalle />} />
+        <Route
+          path="/"
+          element={<Inicio esAdmin={esAdmin} />}
+        />
+
+        <Route
+          path="/equipos/:teamId"
+          element={<EquipoDetalle />}
+        />
       </Routes>
 
       <Footer />

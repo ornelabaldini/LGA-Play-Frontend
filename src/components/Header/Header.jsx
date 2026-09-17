@@ -1,15 +1,15 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import "./Header.css";
 import lga from "../../assets/lga.png";
+import Ingresar from "../Ingresar/Ingresar";
 
-function Header() {
+function Header({ esAdmin, setEsAdmin }) {
   const [imagenGrande, setImagenGrande] = useState(false);
 
   return (
     <>
       <header className="header">
 
-        {/* Cancha de fondo */}
         <div className="header__cancha">
           <div className="header__lineaCentral"></div>
           <div className="header__circuloCentral"></div>
@@ -24,7 +24,6 @@ function Header() {
           <div className="header__arco header__arco--derecha"></div>
         </div>
 
-        {/* Contenido */}
         <div className="header__contenido">
 
           <div className="header__logo">
@@ -41,9 +40,14 @@ function Header() {
           </div>
 
         </div>
+
+        <Ingresar
+          esAdmin={esAdmin}
+          setEsAdmin={setEsAdmin}
+        />
+
       </header>
 
-      {/* Logo ampliado */}
       {imagenGrande && (
         <div
           className="logo-modal"

@@ -1,14 +1,20 @@
-import "./MenuPrincipal.css";
+﻿import "./MenuPrincipal.css";
 
-function MenuPrincipal({ seccion, setSeccion }) {
+function MenuPrincipal({ seccion, setSeccion, esAdmin }) {
   const opciones = [
-    { icono: "📝", texto: "Cargar Fecha", seccion: "cargarFecha" },
-    { icono: "🏆", texto: "Tabla de posiciones", seccion: "tabla" },
+    { icono: "📆", texto: "Tabla de posiciones", seccion: "tabla" },
     { icono: "📅", texto: "Fixture y resultados", seccion: "partidos" },
     { icono: "👟", texto: "Goleadores", seccion: "goleadores" },
     { icono: "🔥", texto: "Playoffs", seccion: "playoffs" },
-   
   ];
+
+  if (esAdmin) {
+    opciones.unshift({
+      icono: "📝",
+      texto: "Cargar Fecha",
+      seccion: "cargarFecha",
+    });
+  }
 
   return (
     <nav className="menu">
