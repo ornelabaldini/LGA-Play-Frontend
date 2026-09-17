@@ -2,8 +2,8 @@
 
 function MenuPrincipal({ seccion, setSeccion, esAdmin }) {
   const opciones = [
-    { icono: "📆", texto: "Tabla de posiciones", seccion: "tabla" },
-    { icono: "📅", texto: "Fixture y resultados", seccion: "partidos" },
+    { icono: "🏆", texto: "Tabla de posiciones", seccion: "tabla" },
+    { icono: "⚽", texto: "Fixture", seccion: "partidos" },
     { icono: "👟", texto: "Goleadores", seccion: "goleadores" },
     { icono: "🔥", texto: "Playoffs", seccion: "playoffs" },
   ];

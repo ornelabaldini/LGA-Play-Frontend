@@ -11,7 +11,7 @@
   border-collapse: separate;
   border-spacing: 0;
   background: white;
-  border-radius: 14px;
+  border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
 }
@@ -165,12 +165,22 @@
 
   .tabla-posiciones th:nth-child(2),
   .tabla-posiciones td:nth-child(2) {
-    width: 28%;
+    width: 30%;
   }
 
-  .tabla-posiciones th:nth-child(n+3),
-  .tabla-posiciones td:nth-child(n+3) {
-    width: 8.125%;
+  .tabla-posiciones th:nth-child(3),
+  .tabla-posiciones td:nth-child(3) {
+    width: 9%;
+  }
+
+  .tabla-posiciones th:nth-child(4),
+  .tabla-posiciones td:nth-child(4) {
+    width: 8%;
+  }
+
+  .tabla-posiciones th:nth-child(n+5),
+  .tabla-posiciones td:nth-child(n+5) {
+    width: 7.666%;
   }
 
   .equipo-enlace {
@@ -181,8 +191,10 @@
 
   .nombre-equipo {
     min-width: 0;
+    max-width: 100%;
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    word-break: normal;
     line-height: 1.15;
     font-size: 10px;
   }

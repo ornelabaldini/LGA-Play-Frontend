@@ -52,14 +52,14 @@ function TablaPosiciones() {
           <tr>
             <th>#</th>
             <th>Equipo</th>
+            <th>PTS</th>
+            <th>DG</th>
             <th>PJ</th>
             <th>PG</th>
             <th>PE</th>
             <th>PP</th>
             <th>GF</th>
             <th>GC</th>
-            <th>DG</th>
-            <th>PTS</th>
           </tr>
         </thead>
 
@@ -76,17 +76,17 @@ function TablaPosiciones() {
                   teamId={equipo.id_team}
                   teamName={equipo.name}
                 />
-                <span>{equipo.name}</span>
+                <span className="nombre-equipo">{equipo.name}</span>
               </Link>
               </td>
+              <td className="puntos">{equipo.points}</td>
+              <td>{equipo.goalDifference}</td>
               <td>{equipo.wins + equipo.draws + equipo.losses}</td>
               <td>{equipo.wins}</td>
               <td>{equipo.draws}</td>
               <td>{equipo.losses}</td>
               <td>0</td>
               <td>0</td>
-              <td>{equipo.goalDifference}</td>
-              <td>{equipo.points}</td>
             </tr>
           ))}
         </tbody>

@@ -32,7 +32,7 @@ function Hero() {
 
   return (
     <section className="hero">
-      <h2>Finalísima</h2>
+      <h2>⚔️ Finalísima</h2>
 
       <div className="finalisima">
         <article className="finalisima__equipo">

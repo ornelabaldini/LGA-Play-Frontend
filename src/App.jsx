@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Footer from "./components/Footer/Footer";
@@ -19,6 +19,26 @@ import "./App.css";
 function Inicio({ esAdmin }) {
   const [seccion, setSeccion] = useState("tabla");
 
+ useEffect(() => {
+  const timer = setTimeout(() => {
+    const elemento = document.getElementById(seccion);
+
+    if (elemento) {
+      const posicion =
+        elemento.getBoundingClientRect().top +
+        window.scrollY -
+        150;
+
+      window.scrollTo({
+        top: posicion,
+        behavior: "smooth",
+      });
+    }
+  }, 500);
+
+  return () => clearTimeout(timer);
+}, [seccion]);
+
   return (
     <main className="contenido">
       <Hero />
@@ -32,33 +52,43 @@ function Inicio({ esAdmin }) {
       />
 
       {seccion === "tabla" && (
-        <Panel titulo="🏆 Tabla de posiciones">
-          <TablaPosiciones />
-        </Panel>
+        <div id="tabla">
+          <Panel titulo="">
+            <TablaPosiciones />
+          </Panel>
+        </div>
       )}
 
       {seccion === "partidos" && (
-        <Panel titulo="📅 Fixture y resultados">
-          <Partidos />
-        </Panel>
+        <div id="partidos">
+          <Panel titulo="⚽ Fixture">
+            <Partidos />
+          </Panel>
+        </div>
       )}
 
       {seccion === "goleadores" && (
-        <Panel titulo="👟 Goleadores">
-          <Goleadores />
-        </Panel>
+        <div id="goleadores">
+          <Panel titulo="👟 Goleadores">
+            <Goleadores />
+          </Panel>
+        </div>
       )}
 
       {seccion === "playoffs" && (
-        <Panel titulo="🔥 Playoffs">
-          <Playoffs />
-        </Panel>
+        <div id="playoffs">
+          <Panel titulo="🔥 Playoffs">
+            <Playoffs />
+          </Panel>
+        </div>
       )}
 
       {esAdmin && seccion === "cargarFecha" && (
-        <Panel titulo="Cargar Fecha">
-          <CargarFecha />
-        </Panel>
+        <div id="cargarFecha">
+          <Panel titulo="Cargar Fecha">
+            <CargarFecha />
+          </Panel>
+        </div>
       )}
     </main>
   );
