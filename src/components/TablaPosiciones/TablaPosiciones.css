@@ -63,12 +63,12 @@
   box-shadow: inset 5px 0 0 #16a34a;
 }
 
-.tabla-posiciones tbody tr:nth-child(n+2):nth-child(-n+9) td:first-child,
-.tabla-posiciones tbody tr:nth-child(n+2):nth-child(-n+9) td:nth-child(2) {
+.tabla-posiciones tbody tr:nth-child(n+2):nth-child(-n+8) td:first-child,
+.tabla-posiciones tbody tr:nth-child(n+2):nth-child(-n+8) td:nth-child(2) {
   background: rgba(220, 252, 231, 0.55);
 }
 
-.tabla-posiciones tbody tr:nth-child(n+2):nth-child(-n+9) td:first-child {
+.tabla-posiciones tbody tr:nth-child(n+2):nth-child(-n+8) td:first-child {
   box-shadow: inset 5px 0 0 #22c55e;
 }
 

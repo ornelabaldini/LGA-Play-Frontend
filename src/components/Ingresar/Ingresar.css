@@ -33,3 +33,16 @@
 .ingresar:active {
   transform: translateY(0);
 }
+
+@media (max-width: 600px) {
+  .ingresar {
+    position: relative;
+    top: auto;
+    right: auto;
+    display: block;
+    margin: 10px 12px 0 auto;
+    width: fit-content;
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+}
