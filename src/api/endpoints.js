@@ -3,4 +3,5 @@ export const ENDPOINTS = {
   players: "/players",
   matchs: "/matchs",
   actualizarResultado: "/matchs/resultado",
+  scorers: "/players/scorers"
 };
