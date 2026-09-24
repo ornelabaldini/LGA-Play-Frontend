@@ -1,20 +1,29 @@
 ﻿import { useEffect, useState } from "react";
 import "./Goleadores.css";
-import { goleadoresPrueba } from "../../data/goleadoresMock";
+import { getScorers } from "../../services/playersService";
 
 function Goleadores() {
   const [goleadores, setGoleadores] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    setTimeout(() => {
-      setGoleadores(goleadoresPrueba);
-      setCargando(false);
-    }, 300);
+    getScorers()
+      .then((data) => setGoleadores(data))
+      .catch((err) => setError(err.message))
+      .finally(() => setCargando(false));
   }, []);
 
   if (cargando) {
     return <p>Cargando goleadores...</p>;
+  }
+
+  if (error) {
+    return <p>Error al cargar goleadores: {error}</p>;
+  }
+
+  if (goleadores.length === 0) {
+    return <p>No hay goleadores registrados.</p>;
   }
 
   const lider = goleadores[0];

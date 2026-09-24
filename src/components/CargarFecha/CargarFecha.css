@@ -1,3 +1,4 @@
+
 .cargar-resultado {
   display: flex;
   flex-direction: column;
@@ -39,10 +40,12 @@
 /* PARTIDO */
 
 .resultado-partido {
+  position: relative;
   padding: 20px;
   border-radius: 14px;
   background: #fff;
   box-shadow: var(--sombra);
+  overflow: hidden;
 }
 
 .partido-encabezado {
@@ -76,6 +79,57 @@
 
 .boton-ejemplo:hover {
   background: #f3f4f6;
+}
+
+/* PARTIDO BLOQUEADO */
+
+.resultado-partido--bloqueado {
+  background: #f1f5f9;
+  opacity: 0.72;
+}
+
+.resultado-partido--bloqueado .equipo-columna,
+.resultado-partido--bloqueado .eventos-seccion {
+  background: #e5e7eb;
+}
+
+.resultado-partido--bloqueado input:disabled,
+.resultado-partido--bloqueado select:disabled {
+  background: #d1d5db;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.resultado-partido--bloqueado .evento-item {
+  background: #d1d5db;
+}
+
+.resultado-partido--bloqueado .evento-item button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* BOTONES */
+
+.acciones-ejemplo {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.boton-modificar {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.boton-modificar:hover {
+  background: #f1f5f9;
 }
 
 /* RESULTADO */
@@ -286,7 +340,7 @@
   .boton-ejemplo {
     width: 100%;
   }
-  
+
   .selector-fecha {
     width: 100%;
     box-sizing: border-box;
@@ -335,6 +389,8 @@
   }
 }
 
+/* AVISOS */
+
 .aviso-error {
   margin: 16px 0;
   padding: 12px 16px;
@@ -343,5 +399,17 @@
   border: 1px solid #fca5a5;
   color: #991b1b;
   font-weight: 600;
+  text-align: center;
+}
+
+.aviso-ejemplo {
+  margin-top: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
+  font-size: 12px;
+  font-weight: 700;
   text-align: center;
 }

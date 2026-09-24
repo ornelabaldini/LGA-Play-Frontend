@@ -1,22 +1,8 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { getMatchesWithTeams } from "../../services/matchsService";
 import { getPlayers } from "../../services/playersService";
 import { actualizarResultado } from "../../services/resultadosService";
 import "./CargarFecha.css";
-
-const MODO_PRUEBA = true;
-
-const jugadoresPruebaLocal = [
-  { id: 1001, name: "Juan Pérez" },
-  { id: 1002, name: "Matías Gómez" },
-  { id: 1003, name: "Pablo López" },
-];
-
-const jugadoresPruebaVisitante = [
-  { id: 1004, name: "Lucas Díaz" },
-  { id: 1005, name: "Martín Ruiz" },
-  { id: 1006, name: "Diego Fernández" },
-];
 
 function CargarFecha() {
   const [partidos, setPartidos] = useState([]);
@@ -24,6 +10,7 @@ function CargarFecha() {
   const [fechaSeleccionada, setFechaSeleccionada] = useState("");
   const [resultados, setResultados] = useState({});
   const [erroresGuardado, setErroresGuardado] = useState({});
+  const [partidosBloqueados, setPartidosBloqueados] = useState({});
 
   useEffect(() => {
     cargarDatos();
@@ -48,6 +35,8 @@ function CargarFecha() {
   ];
 
   function actualizarCampo(partidoId, campo, valor) {
+    if (partidosBloqueados[partidoId]) return;
+
     setResultados((prev) => {
       const resultadoActual = prev[partidoId] || {};
 
@@ -58,20 +47,14 @@ function CargarFecha() {
 
       if (campo === "golesLocal") {
         const cantidadGoles = Number(valor || 0);
-        const goleadores =
-          resultadoActual.goleadoresLocal || [];
-
-        nuevoResultado.goleadoresLocal =
-          goleadores.slice(0, cantidadGoles);
+        const goleadores = resultadoActual.goleadoresLocal || [];
+        nuevoResultado.goleadoresLocal = goleadores.slice(0, cantidadGoles);
       }
 
       if (campo === "golesVisitante") {
         const cantidadGoles = Number(valor || 0);
-        const goleadores =
-          resultadoActual.goleadoresVisitante || [];
-
-        nuevoResultado.goleadoresVisitante =
-          goleadores.slice(0, cantidadGoles);
+        const goleadores = resultadoActual.goleadoresVisitante || [];
+        nuevoResultado.goleadoresVisitante = goleadores.slice(0, cantidadGoles);
       }
 
       return {
@@ -88,6 +71,7 @@ function CargarFecha() {
 
   function agregarEvento(partidoId, campo, jugadorId) {
     if (!jugadorId) return;
+    if (partidosBloqueados[partidoId]) return;
 
     setResultados((prev) => {
       const resultadoActual = prev[partidoId] || {};
@@ -111,10 +95,7 @@ function CargarFecha() {
         ...prev,
         [partidoId]: {
           ...resultadoActual,
-          [campo]: [
-            ...eventosActuales,
-            Number(jugadorId),
-          ],
+          [campo]: [...eventosActuales, Number(jugadorId)],
         },
       };
     });
@@ -126,6 +107,8 @@ function CargarFecha() {
   }
 
   function eliminarEvento(partidoId, campo, indice) {
+    if (partidosBloqueados[partidoId]) return;
+
     setResultados((prev) => {
       const resultadoActual = prev[partidoId] || {};
       const eventosActuales = resultadoActual[campo] || [];
@@ -134,9 +117,7 @@ function CargarFecha() {
         ...prev,
         [partidoId]: {
           ...resultadoActual,
-          [campo]: eventosActuales.filter(
-            (_, i) => i !== indice
-          ),
+          [campo]: eventosActuales.filter((_, i) => i !== indice),
         },
       };
     });
@@ -152,81 +133,42 @@ function CargarFecha() {
       (j) => Number(j.id) === Number(jugadorId)
     );
 
-    if (jugador) {
-      return jugador.name;
-    }
-
-    const jugadorPrueba = [
-      ...jugadoresPruebaLocal,
-      ...jugadoresPruebaVisitante,
-    ].find(
-      (j) => Number(j.id) === Number(jugadorId)
-    );
-
-    return jugadorPrueba?.name || `Jugador ${jugadorId}`;
+    return jugador?.name || `Jugador ${jugadorId}`;
   }
 
-  function obtenerJugadoresEquipo(teamId, lado) {
-    if (MODO_PRUEBA) {
-      return lado === "local"
-        ? jugadoresPruebaLocal
-        : jugadoresPruebaVisitante;
-    }
-
-    return jugadores.filter(
-      (jugador) =>
-        Number(jugador.team_id) === Number(teamId)
-    );
+  function obtenerJugadoresEquipo() {
+    return jugadores;
   }
 
   function contarGoleadores(goleadores) {
     const conteo = {};
 
     goleadores.forEach((jugadorId) => {
-      conteo[jugadorId] =
-        (conteo[jugadorId] || 0) + 1;
+      conteo[jugadorId] = (conteo[jugadorId] || 0) + 1;
     });
 
     return conteo;
   }
 
-  function cargarEjemplo(partido) {
-    const resultadoEjemplo = {
-      golesLocal: 2,
-      golesVisitante: 1,
-      goleadoresLocal: [1001, 1001],
-      goleadoresVisitante: [1004],
-      amarillasLocal: [1002],
-      amarillasVisitante: [1005],
-      rojasLocal: [],
-      rojasVisitante: [],
-    };
-
-    setResultados((prev) => ({
+  function modificarPartido(partidoId) {
+    setPartidosBloqueados((prev) => ({
       ...prev,
-      [partido.id_match]: resultadoEjemplo,
-    }));
-
-    setErroresGuardado((prev) => ({
-      ...prev,
-      [partido.id_match]: "",
+      [partidoId]: false,
     }));
   }
 
   async function guardarResultado(partido) {
     const partidoId = partido.id_match;
+
+    if (partidosBloqueados[partidoId]) return;
+
     const resultado = resultados[partidoId] || {};
 
     const golesLocal = Number(resultado.golesLocal || 0);
-    const golesVisitante = Number(
-      resultado.golesVisitante || 0
-    );
+    const golesVisitante = Number(resultado.golesVisitante || 0);
 
-    const goleadoresLocal =
-      resultado.goleadoresLocal || [];
-
-    const goleadoresVisitante =
-      resultado.goleadoresVisitante || [];
+    const goleadoresLocal = resultado.goleadoresLocal || [];
+    const goleadoresVisitante = resultado.goleadoresVisitante || [];
 
     if (goleadoresLocal.length !== golesLocal) {
       setErroresGuardado((prev) => ({
@@ -252,36 +194,38 @@ function CargarFecha() {
         [partidoId]: "",
       }));
 
-      await actualizarResultado({
-        partidoId,
-        golesLocal,
-        golesVisitante,
-        goleadores: [
+      await actualizarResultado(partidoId, {
+        goalsA: golesLocal,
+        goalsB: golesVisitante,
+        scorers: [
           ...goleadoresLocal,
           ...goleadoresVisitante,
         ],
-        amarillasLocal:
-          resultado.amarillasLocal || [],
-        amarillasVisitante:
-          resultado.amarillasVisitante || [],
-        rojasLocal:
-          resultado.rojasLocal || [],
-        rojasVisitante:
-          resultado.rojasVisitante || [],
+        yellow_cards: [
+          ...(resultado.amarillasLocal || []),
+          ...(resultado.amarillasVisitante || []),
+        ],
+        red_cards: [
+          ...(resultado.rojasLocal || []),
+          ...(resultado.rojasVisitante || []),
+        ],
       });
+
+      setPartidosBloqueados((prev) => ({
+        ...prev,
+        [partidoId]: true,
+      }));
 
       setErroresGuardado((prev) => ({
         ...prev,
-        [partidoId]:
-          "Resultado guardado correctamente.",
+        [partidoId]: "Resultado guardado correctamente.",
       }));
     } catch (error) {
       console.error("Error guardando resultado:", error);
 
       setErroresGuardado((prev) => ({
         ...prev,
-        [partidoId]:
-          "No se pudo guardar el resultado. El endpoint del backend todavía no está disponible.",
+        [partidoId]: "No se pudo guardar el resultado.",
       }));
     }
   }
@@ -292,34 +236,28 @@ function CargarFecha() {
     goleadores,
     campo
   ) {
-    const conteo =
-      contarGoleadores(goleadores);
-
-    const resultado =
-      resultados[partidoId] || {};
+    const conteo = contarGoleadores(goleadores);
+    const resultado = resultados[partidoId] || {};
 
     const cantidadGoles =
       campo === "goleadoresLocal"
         ? Number(resultado.golesLocal || 0)
         : Number(resultado.golesVisitante || 0);
 
-    const limiteAlcanzado =
-      goleadores.length >= cantidadGoles;
+    const limiteAlcanzado = goleadores.length >= cantidadGoles;
+    const bloqueado = partidosBloqueados[partidoId];
 
     return (
       <>
         <select
           value=""
           disabled={
+            bloqueado ||
             cantidadGoles === 0 ||
             limiteAlcanzado
           }
           onChange={(e) =>
-            agregarEvento(
-              partidoId,
-              campo,
-              e.target.value
-            )
+            agregarEvento(partidoId, campo, e.target.value)
           }
         >
           <option value="">
@@ -331,10 +269,7 @@ function CargarFecha() {
           </option>
 
           {jugadoresEquipo.map((jugador) => (
-            <option
-              key={jugador.id}
-              value={jugador.id}
-            >
+            <option key={jugador.id} value={jugador.id}>
               {jugador.name}
             </option>
           ))}
@@ -346,10 +281,10 @@ function CargarFecha() {
 
         {goleadores.length > 0 && (
           <div className="eventos-cargados">
-            {goleadores.map((jugadorId, indice) => (
+            {[...new Set(goleadores)].map((jugadorId) => (
               <div
                 className="evento-item"
-                key={`${jugadorId}-${indice}`}
+                key={jugadorId}
               >
                 <span>
                   {obtenerNombreJugador(jugadorId)}
@@ -359,12 +294,9 @@ function CargarFecha() {
 
                 <button
                   type="button"
+                  disabled={bloqueado}
                   onClick={() =>
-                    eliminarEvento(
-                      partidoId,
-                      campo,
-                      indice
-                    )
+                    eliminarEvento(partidoId, campo, indice)
                   }
                 >
                   ×
@@ -384,31 +316,23 @@ function CargarFecha() {
     campo,
     etiqueta
   ) {
+    const bloqueado = partidosBloqueados[partidoId];
+
     return (
       <>
-        <div className="evento-titulo">
-          {etiqueta}
-        </div>
+        <div className="evento-titulo">{etiqueta}</div>
 
         <select
           value=""
+          disabled={bloqueado}
           onChange={(e) =>
-            agregarEvento(
-              partidoId,
-              campo,
-              e.target.value
-            )
+            agregarEvento(partidoId, campo, e.target.value)
           }
         >
-          <option value="">
-            Seleccionar jugador
-          </option>
+          <option value="">Seleccionar jugador</option>
 
           {jugadoresEquipo.map((jugador) => (
-            <option
-              key={jugador.id}
-              value={jugador.id}
-            >
+            <option key={jugador.id} value={jugador.id}>
               {jugador.name}
             </option>
           ))}
@@ -419,20 +343,15 @@ function CargarFecha() {
             {eventos.map((jugadorId, indice) => (
               <div
                 className="evento-item"
-                key={`${jugadorId}-${indice}`}
+                key={jugadorId}
               >
-                <span>
-                  {obtenerNombreJugador(jugadorId)}
-                </span>
+                <span>{obtenerNombreJugador(jugadorId)}</span>
 
                 <button
                   type="button"
+                  disabled={bloqueado}
                   onClick={() =>
-                    eliminarEvento(
-                      partidoId,
-                      campo,
-                      indice
-                    )
+                    eliminarEvento(partidoId, campo, indice)
                   }
                 >
                   ×
@@ -448,102 +367,70 @@ function CargarFecha() {
   const partidosFiltrados = fechaSeleccionada
     ? partidos.filter(
         (partido) =>
-          String(partido.matchday) ===
-          String(fechaSeleccionada)
+          String(partido.matchday) === String(fechaSeleccionada)
       )
     : [];
 
   return (
     <section className="cargar-resultado">
       <div className="selector-fecha">
-        <label htmlFor="fecha">
-          Seleccioná una fecha
-        </label>
+        <label htmlFor="fecha">Seleccioná una fecha</label>
 
         <select
           id="fecha"
           value={fechaSeleccionada}
-          onChange={(e) =>
-            setFechaSeleccionada(e.target.value)
-          }
+          onChange={(e) => setFechaSeleccionada(e.target.value)}
         >
-          <option value="">
-            Seleccionar fecha
-          </option>
+          <option value="">Seleccionar fecha</option>
 
           {fechasDisponibles.map((fecha) => (
-            <option
-              key={fecha}
-              value={fecha}
-            >
+            <option key={fecha} value={fecha}>
               Fecha {fecha}
             </option>
           ))}
         </select>
       </div>
 
-      {MODO_PRUEBA && (
-        <div className="aviso-prueba">
-          🧪 Modo prueba activo: los jugadores son
-          de ejemplo.
-        </div>
-      )}
-
       {partidosFiltrados.map((partido) => {
-        const resultado =
-          resultados[partido.id_match] || {};
-
-        const jugadoresLocal =
-          obtenerJugadoresEquipo(
-            partido.teamA_id,
-            "local"
-          );
-
-        const jugadoresVisitante =
-          obtenerJugadoresEquipo(
-            partido.teamB_id,
-            "visitante"
-          );
+        const resultado = resultados[partido.id_match] || {};
+        const jugadoresLocal = obtenerJugadoresEquipo();
+        const jugadoresVisitante = obtenerJugadoresEquipo();
+        const bloqueado = partidosBloqueados[partido.id_match];
 
         return (
           <div
-            className="resultado-partido"
+            className={`resultado-partido ${
+              bloqueado ? "resultado-partido--bloqueado" : ""
+            }`}
             key={partido.id_match}
           >
             <div className="partido-encabezado">
-              <strong>
-                {partido.teamAName}
-              </strong>
-
+              <strong>{partido.teamAName}</strong>
               <span>vs</span>
-
-              <strong>
-                {partido.teamBName}
-              </strong>
+              <strong>{partido.teamBName}</strong>
             </div>
 
-            <button
-              type="button"
-              className="boton-ejemplo"
-              onClick={() =>
-                cargarEjemplo(partido)
-              }
-            >
-              🧪 Cargar ejemplo
-            </button>
+            <div className="acciones-ejemplo">
+              {bloqueado && (
+                <button
+                  type="button"
+                  className="boton-modificar"
+                  onClick={() => modificarPartido(partido.id_match)}
+                >
+                  ✏️ Modificar
+                </button>
+              )}
+            </div>
 
             <div className="resultado-goles">
               <div className="equipo-resultado">
-                <span>
-                  {partido.teamAName}
-                </span>
+                <span>{partido.teamAName}</span>
 
                 <input
                   type="number"
                   min="0"
-                  value={
-                    resultado.golesLocal ?? ""
-                  }
+                  disabled={bloqueado}
+                  value={resultado.golesLocal ?? ""}
                   onChange={(e) =>
                     actualizarCampo(
                       partido.id_match,
@@ -554,21 +441,16 @@ function CargarFecha() {
                 />
               </div>
 
-              <div className="separador-goles">
-                -
-              </div>
+              <div className="separador-goles">-</div>
 
               <div className="equipo-resultado">
-                <span>
-                  {partido.teamBName}
-                </span>
+                <span>{partido.teamBName}</span>
 
                 <input
                   type="number"
                   min="0"
-                  value={
-                    resultado.golesVisitante ?? ""
-                  }
+                  disabled={bloqueado}
+                  value={resultado.golesVisitante ?? ""}
                   onChange={(e) =>
                     actualizarCampo(
                       partido.id_match,
@@ -588,12 +470,10 @@ function CargarFecha() {
 
                 <div className="eventos-seccion">
                   <h4>⚽ Goleadores</h4>
-
                   {renderGoleadores(
                     partido.id_match,
                     jugadoresLocal,
-                    resultado.goleadoresLocal ||
-                      [],
+                    resultado.goleadoresLocal || [],
                     "goleadoresLocal"
                   )}
                 </div>
@@ -602,8 +482,7 @@ function CargarFecha() {
                   {renderTarjetas(
                     partido.id_match,
                     jugadoresLocal,
-                    resultado.amarillasLocal ||
-                      [],
+                    resultado.amarillasLocal || [],
                     "amarillasLocal",
                     "🟨 Amarillas"
                   )}
@@ -627,12 +506,10 @@ function CargarFecha() {
 
                 <div className="eventos-seccion">
                   <h4>⚽ Goleadores</h4>
-
                   {renderGoleadores(
                     partido.id_match,
                     jugadoresVisitante,
-                    resultado.goleadoresVisitante ||
-                      [],
+                    resultado.goleadoresVisitante || [],
                     "goleadoresVisitante"
                   )}
                 </div>
@@ -641,8 +518,7 @@ function CargarFecha() {
                   {renderTarjetas(
                     partido.id_match,
                     jugadoresVisitante,
-                    resultado.amarillasVisitante ||
-                      [],
+                    resultado.amarillasVisitante || [],
                     "amarillasVisitante",
                     "🟨 Amarillas"
                   )}
@@ -652,8 +528,7 @@ function CargarFecha() {
                   {renderTarjetas(
                     partido.id_match,
                     jugadoresVisitante,
-                    resultado.rojasVisitante ||
-                      [],
+                    resultado.rojasVisitante || [],
                     "rojasVisitante",
                     "🟥 Rojas"
                   )}
@@ -661,26 +536,17 @@ function CargarFecha() {
               </div>
             </div>
 
-            {erroresGuardado[
-              partido.id_match
-            ] && (
-              <div
-                className="aviso-error"
-                role="alert"
-              >
-                ⚠️{" "}
-                {erroresGuardado[
-                  partido.id_match
-                ]}
+            {erroresGuardado[partido.id_match] && (
+              <div className="aviso-error" role="alert">
+                ⚠️ {erroresGuardado[partido.id_match]}
               </div>
             )}
 
             <button
               type="button"
               className="boton-guardar"
-              onClick={() =>
-                guardarResultado(partido)
-              }
+              disabled={bloqueado}
+              onClick={() => guardarResultado(partido)}
             >
               💾 Guardar resultado
             </button>
