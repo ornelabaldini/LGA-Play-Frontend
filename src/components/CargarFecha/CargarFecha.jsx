@@ -309,7 +309,7 @@ function CargarFecha() {
                     )
                   }
                 >
-                  Eliminar
+                  ×
                 </button>
               </div>
             ))}
@@ -368,7 +368,7 @@ function CargarFecha() {
                     )
                   }
                 >
-                  Eliminar
+                  ×
                 </button>
               </div>
             ))}
@@ -431,7 +431,7 @@ function CargarFecha() {
                   className="boton-modificar"
                   onClick={() => modificarPartido(partido.id_match)}
                 >
-                  Modificar
+                  ✏️ Modificar
                 </button>
               )}
             </div>
@@ -483,8 +483,7 @@ function CargarFecha() {
                 </h3>
 
                 <div className="eventos-seccion">
-                  <h4>Goleadores</h4>
-
+                  <h4>⚽ Goleadores</h4>
                   {renderGoleadores(
                     partido.id_match,
                     jugadoresLocal,
@@ -499,7 +498,7 @@ function CargarFecha() {
                     jugadoresLocal,
                     resultado.amarillasLocal || [],
                     "amarillasLocal",
-                    "Amarillas"
+                    "🟨 Amarillas"
                   )}
                 </div>
 
@@ -509,7 +508,7 @@ function CargarFecha() {
                     jugadoresLocal,
                     resultado.rojasLocal || [],
                     "rojasLocal",
-                    "Rojas"
+                    "🟥 Rojas"
                   )}
                 </div>
               </div>
@@ -520,8 +519,7 @@ function CargarFecha() {
                 </h3>
 
                 <div className="eventos-seccion">
-                  <h4>Goleadores</h4>
-
+                  <h4>⚽ Goleadores</h4>
                   {renderGoleadores(
                     partido.id_match,
                     jugadoresVisitante,
@@ -536,7 +534,7 @@ function CargarFecha() {
                     jugadoresVisitante,
                     resultado.amarillasVisitante || [],
                     "amarillasVisitante",
-                    "Amarillas"
+                    "🟨 Amarillas"
                   )}
                 </div>
 
@@ -546,7 +544,7 @@ function CargarFecha() {
                     jugadoresVisitante,
                     resultado.rojasVisitante || [],
                     "rojasVisitante",
-                    "Rojas"
+                    "🟥 Rojas"
                   )}
                 </div>
               </div>
@@ -554,7 +552,7 @@ function CargarFecha() {
 
             {erroresGuardado[partido.id_match] && (
               <div className="aviso-error" role="alert">
-                {erroresGuardado[partido.id_match]}
+                ⚠️ {erroresGuardado[partido.id_match]}
               </div>
             )}
 
@@ -564,7 +562,7 @@ function CargarFecha() {
               disabled={bloqueado}
               onClick={() => guardarResultado(partido)}
             >
-              Guardar resultado
+              💾 Guardar resultado
             </button>
           </div>
         );
