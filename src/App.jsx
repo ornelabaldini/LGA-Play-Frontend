@@ -18,6 +18,7 @@ import "./App.css";
 
 function Inicio({ esAdmin }) {
   const [seccion, setSeccion] = useState("tabla");
+  const [temporada, setTemporada] = useState(new Date().getFullYear());
 
  useEffect(() => {
   const timer = setTimeout(() => {
@@ -43,7 +44,10 @@ function Inicio({ esAdmin }) {
     <main className="contenido">
       <Hero />
 
-      <SelectorTemporada />
+      <SelectorTemporada
+          temporada={temporada}
+          onChange={setTemporada}
+        />
 
       <MenuPrincipal
         seccion={seccion}
@@ -70,7 +74,7 @@ function Inicio({ esAdmin }) {
       {seccion === "goleadores" && (
         <div id="goleadores">
           <Panel titulo="👟 Goleadores">
-            <Goleadores />
+            <Goleadores temporada={temporada} />
           </Panel>
         </div>
       )}

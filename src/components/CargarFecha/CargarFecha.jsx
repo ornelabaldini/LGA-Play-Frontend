@@ -1,5 +1,5 @@
-﻿import { useEffect, useState } from "react";
-import { getMatchesWithTeams } from "../../services/matchsService";
+import { useEffect, useState } from "react";
+import { getMatchesWithTeams } from "../../services/matchesService";
 import { getPlayers } from "../../services/playersService";
 import { actualizarResultado } from "../../services/resultadosService";
 import "./CargarFecha.css";
@@ -48,13 +48,19 @@ function CargarFecha() {
       if (campo === "golesLocal") {
         const cantidadGoles = Number(valor || 0);
         const goleadores = resultadoActual.goleadoresLocal || [];
-        nuevoResultado.goleadoresLocal = goleadores.slice(0, cantidadGoles);
+        nuevoResultado.goleadoresLocal = goleadores.slice(
+          0,
+          cantidadGoles
+        );
       }
 
       if (campo === "golesVisitante") {
         const cantidadGoles = Number(valor || 0);
         const goleadores = resultadoActual.goleadoresVisitante || [];
-        nuevoResultado.goleadoresVisitante = goleadores.slice(0, cantidadGoles);
+        nuevoResultado.goleadoresVisitante = goleadores.slice(
+          0,
+          cantidadGoles
+        );
       }
 
       return {
@@ -296,10 +302,14 @@ function CargarFecha() {
                   type="button"
                   disabled={bloqueado}
                   onClick={() =>
-                    eliminarEvento(partidoId, campo, indice)
+                    eliminarEvento(
+                      partidoId,
+                      campo,
+                      goleadores.indexOf(jugadorId)
+                    )
                   }
                 >
-                  ×
+                  Eliminar
                 </button>
               </div>
             ))}
@@ -343,7 +353,7 @@ function CargarFecha() {
             {eventos.map((jugadorId, indice) => (
               <div
                 className="evento-item"
-                key={jugadorId}
+                key={`${jugadorId}-${indice}`}
               >
                 <span>{obtenerNombreJugador(jugadorId)}</span>
 
@@ -351,10 +361,14 @@ function CargarFecha() {
                   type="button"
                   disabled={bloqueado}
                   onClick={() =>
-                    eliminarEvento(partidoId, campo, indice)
+                    eliminarEvento(
+                      partidoId,
+                      campo,
+                      indice
+                    )
                   }
                 >
-                  ×
+                  Eliminar
                 </button>
               </div>
             ))}
@@ -417,7 +431,7 @@ function CargarFecha() {
                   className="boton-modificar"
                   onClick={() => modificarPartido(partido.id_match)}
                 >
-                  ✏️ Modificar
+                  Modificar
                 </button>
               )}
             </div>
@@ -469,7 +483,8 @@ function CargarFecha() {
                 </h3>
 
                 <div className="eventos-seccion">
-                  <h4>⚽ Goleadores</h4>
+                  <h4>Goleadores</h4>
+
                   {renderGoleadores(
                     partido.id_match,
                     jugadoresLocal,
@@ -484,7 +499,7 @@ function CargarFecha() {
                     jugadoresLocal,
                     resultado.amarillasLocal || [],
                     "amarillasLocal",
-                    "🟨 Amarillas"
+                    "Amarillas"
                   )}
                 </div>
 
@@ -494,7 +509,7 @@ function CargarFecha() {
                     jugadoresLocal,
                     resultado.rojasLocal || [],
                     "rojasLocal",
-                    "🟥 Rojas"
+                    "Rojas"
                   )}
                 </div>
               </div>
@@ -505,7 +520,8 @@ function CargarFecha() {
                 </h3>
 
                 <div className="eventos-seccion">
-                  <h4>⚽ Goleadores</h4>
+                  <h4>Goleadores</h4>
+
                   {renderGoleadores(
                     partido.id_match,
                     jugadoresVisitante,
@@ -520,7 +536,7 @@ function CargarFecha() {
                     jugadoresVisitante,
                     resultado.amarillasVisitante || [],
                     "amarillasVisitante",
-                    "🟨 Amarillas"
+                    "Amarillas"
                   )}
                 </div>
 
@@ -530,7 +546,7 @@ function CargarFecha() {
                     jugadoresVisitante,
                     resultado.rojasVisitante || [],
                     "rojasVisitante",
-                    "🟥 Rojas"
+                    "Rojas"
                   )}
                 </div>
               </div>
@@ -538,7 +554,7 @@ function CargarFecha() {
 
             {erroresGuardado[partido.id_match] && (
               <div className="aviso-error" role="alert">
-                ⚠️ {erroresGuardado[partido.id_match]}
+                {erroresGuardado[partido.id_match]}
               </div>
             )}
 
@@ -548,7 +564,7 @@ function CargarFecha() {
               disabled={bloqueado}
               onClick={() => guardarResultado(partido)}
             >
-              💾 Guardar resultado
+              Guardar resultado
             </button>
           </div>
         );
@@ -558,4 +574,3 @@ function CargarFecha() {
 }
 
 export default CargarFecha;
-

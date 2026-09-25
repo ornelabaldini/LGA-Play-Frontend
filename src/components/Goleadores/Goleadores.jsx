@@ -2,17 +2,20 @@
 import "./Goleadores.css";
 import { getScorers } from "../../services/playersService";
 
-function Goleadores() {
+function Goleadores({ temporada }) {
   const [goleadores, setGoleadores] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    getScorers()
+    setCargando(true);
+    setError(null);
+
+    getScorers(temporada)
       .then((data) => setGoleadores(data))
       .catch((err) => setError(err.message))
       .finally(() => setCargando(false));
-  }, []);
+  }, [temporada]);
 
   if (cargando) {
     return <p>Cargando goleadores...</p>;
@@ -43,7 +46,10 @@ function Goleadores() {
 
       <div className="tabla-goleadores">
         {goleadores.map((jugador, index) => (
-          <article key={jugador.id} className="fila-goleador">
+          <article
+            key={jugador.id}
+            className="fila-goleador"
+          >
             <span>{index + 1}°</span>
             <strong>{jugador.name}</strong>
             <span>{jugador.position}</span>

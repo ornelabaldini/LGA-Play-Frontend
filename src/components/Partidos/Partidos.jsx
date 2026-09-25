@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMatchesWithTeams } from "../../services/matchsService";
+import { getMatchesWithTeams } from "../../services/matchesService";
 import TarjetaPartido from "../TarjetaPartido/TarjetaPartido";
 import "./Partidos.css";
 
@@ -122,3 +122,4 @@ function Partidos() {
 }
 
 export default Partidos;
+

@@ -9,6 +9,6 @@ export function getPlayerById(id) {
   return apiRequest(`${ENDPOINTS.players}/${id}`);
 }
 
-export function getScorers() {
-  return apiRequest(ENDPOINTS.scorers);
+export function getScorers(seasonId) {
+  return apiRequest(`${ENDPOINTS.scorers}/${seasonId}/top-scorers`);
 }
