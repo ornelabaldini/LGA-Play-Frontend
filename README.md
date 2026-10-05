@@ -1,16 +1,61 @@
-# React + Vite
+# LGA-Play
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+LGA-Play es una aplicación web desarrollada para la gestión y consulta de información de la **Liga General Alvarado (LGA)**.
 
-Currently, two official plugins are available:
+El sistema permite consultar información de los equipos y de las distintas temporadas, incluyendo tabla de posiciones, partidos, goleadores y playoffs. También cuenta con funcionalidades destinadas a la administración del torneo.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Integrantes
 
-## React Compiler
+- Yair Nasif
+- Micaela Astrada
+- Lucas Marques
+- Ornela Baldini
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Demo
 
-## Expanding the Oxlint configuration
+https://lga-play-frontend.vercel.app/
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Repositorios
+
+- **Frontend:** https://github.com/ornelabaldini/LGA-Play-Frontend
+- **Backend:** https://github.com/ymn-git/LGA-Play
+
+## Tecnologías utilizadas
+
+- React
+- JavaScript
+- Vite
+- React Router
+- HTML
+- CSS
+- Oxlint
+
+## Funcionalidades
+
+La aplicación cuenta con las siguientes funcionalidades principales:
+
+- Visualización de la tabla de posiciones.
+- Consulta de partidos y fixture.
+- Consulta de goleadores por temporada.
+- Visualización de playoffs.
+- Consulta del detalle de los equipos.
+- Identificación y visualización de información de los equipos.
+- Selección de temporada.
+- Acceso a funcionalidades de administración.
+- Carga de fechas y resultados.
+- Navegación entre las distintas secciones de la aplicación.
+- Comunicación con el backend mediante solicitudes HTTP.
+
+## Requisitos
+
+Para ejecutar el proyecto de forma local se necesita:
+
+- Node.js
+- npm
+
+## Instalación
+
+Clonar el repositorio:
+
+```bash
+git clone https://github.com/ornelabaldini/LGA-Play-Frontend.git
