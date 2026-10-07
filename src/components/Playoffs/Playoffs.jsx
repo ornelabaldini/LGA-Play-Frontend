@@ -38,7 +38,10 @@ function Playoffs() {
     getTeams()
       .then((data) => {
         const ordenados = ordenarEquipos(data);
-        setEquipos(ordenados.slice(1, 9));
+
+        // 16 equipos para:
+        // Primera ronda → Cuartos → Semifinal → Final
+        setEquipos(ordenados.slice(0, 16));
       })
       .catch((err) => {
         console.error(err);
@@ -54,41 +57,92 @@ function Playoffs() {
 
   const nombres = equipos.map((equipo) => equipo.name);
 
-  while (nombres.length < 8) {
+  // Completar lugares si todavía no hay 16 equipos
+  while (nombres.length < 16) {
     nombres.push("Por definir");
   }
 
+  /*
+   * =========================
+   * PRIMERA RONDA
+   * =========================
+   *
+   * 16 equipos
+   * 8 partidos
+   */
+
   const primeraRonda = [
-    [nombres[0], nombres[7]],
-    [nombres[3], nombres[4]],
-    [nombres[1], nombres[6]],
-    [nombres[2], nombres[5]],
+    [nombres[0], nombres[15]],
+    [nombres[7], nombres[8]],
+    [nombres[3], nombres[12]],
+    [nombres[4], nombres[11]],
+    [nombres[1], nombres[14]],
+    [nombres[6], nombres[9]],
+    [nombres[2], nombres[13]],
+    [nombres[5], nombres[10]],
   ];
+
+  /*
+   * =========================
+   * CUARTOS
+   * =========================
+   *
+   * 8 ganadores
+   * 4 partidos
+   */
 
   const cuartos = [
-    ["Ganador", "Ganador"],
-    ["Ganador", "Ganador"],
+    ["Ganador 1", "Ganador 2"],
+    ["Ganador 3", "Ganador 4"],
+    ["Ganador 5", "Ganador 6"],
+    ["Ganador 7", "Ganador 8"],
   ];
+
+  /*
+   * =========================
+   * SEMIFINALES
+   * =========================
+   *
+   * 4 ganadores
+   * 2 partidos
+   */
 
   const semifinal = [
-    ["Ganador", "Ganador"],
+    ["Ganador Cuartos 1", "Ganador Cuartos 2"],
+    ["Ganador Cuartos 3", "Ganador Cuartos 4"],
   ];
 
+  /*
+   * =========================
+   * FINAL
+   * =========================
+   *
+   * 2 ganadores
+   * 1 partido
+   */
+
   const final = [
-    ["Ganador", "Ganador"],
+    ["Ganador Semifinal 1", "Ganador Semifinal 2"],
   ];
 
   return (
     <section className="playoffs">
+
       <div className="playoffs__encabezado">
         <div>
           <p>El camino hacia la Final&iacute;sima</p>
         </div>
 
-        <span className="playoffs__badge">8 equipos</span>
+        <span className="playoffs__badge">16 equipos</span>
       </div>
 
+
       <div className="playoffs__cuadro">
+
+        {/* =========================
+            PRIMERA RONDA
+            16 → 8
+            ========================= */}
 
         <div className="playoffs__ronda ronda-primera">
           <h3>Primera ronda</h3>
@@ -104,6 +158,12 @@ function Playoffs() {
           </div>
         </div>
 
+
+        {/* =========================
+            CUARTOS
+            8 → 4
+            ========================= */}
+
         <div className="playoffs__ronda ronda-cuartos">
           <h3>Cuartos</h3>
 
@@ -117,6 +177,12 @@ function Playoffs() {
             ))}
           </div>
         </div>
+
+
+        {/* =========================
+            SEMIFINALES
+            4 → 2
+            ========================= */}
 
         <div className="playoffs__ronda ronda-semifinal">
           <h3>Semifinal</h3>
@@ -132,6 +198,12 @@ function Playoffs() {
           </div>
         </div>
 
+
+        {/* =========================
+            FINAL
+            2 → 1
+            ========================= */}
+
         <div className="playoffs__ronda ronda-final">
           <h3>Final</h3>
 
@@ -144,6 +216,17 @@ function Playoffs() {
               />
             ))}
           </div>
+
+          {/* =========================
+              CAMPEÓN
+              ========================= */}
+
+          <div className="playoffs__campeon">
+            <span>🏆</span>
+            <strong>Campeón </strong>
+            <span> Por definir</span>
+          </div>
+
         </div>
 
       </div>
@@ -152,3 +235,5 @@ function Playoffs() {
 }
 
 export default Playoffs;
+
+

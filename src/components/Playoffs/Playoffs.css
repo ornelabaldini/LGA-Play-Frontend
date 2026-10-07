@@ -95,19 +95,43 @@
   flex-direction: column;
 }
 
+/*
+   PRIMERA RONDA
+   16 equipos
+   8 partidos
+*/
+
 .ronda-primera .ronda__partidos {
   gap: 18px;
 }
+
+/*
+   CUARTOS DE FINAL
+   8 equipos
+   4 partidos
+*/
 
 .ronda-cuartos .ronda__partidos {
   gap: 18px;
   justify-content: center;
 }
 
+/*
+   SEMIFINALES
+   4 equipos
+   2 partidos
+*/
+
 .ronda-semifinal .ronda__partidos {
   gap: 18px;
   justify-content: center;
 }
+
+/*
+   FINAL
+   2 equipos
+   1 partido
+*/
 
 .ronda-final .ronda__partidos {
   gap: 18px;
@@ -237,4 +261,15 @@
   .ronda-final .llave-partido {
     border-width: 3px;
   }
+}
+
+.playoffs__campeon {
+  margin-top: 18px;
+  padding: 10px;
+  border-radius: 9px;
+  background: #ecfdf5;
+  color: var(--verde-oscuro);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 900;
 }
