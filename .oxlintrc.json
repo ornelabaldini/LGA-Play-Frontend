@@ -1,3 +1,6 @@
+// Configuración de Oxlint para analizar y detectar posibles errores en el código.
+// Define los plugins utilizados y las reglas específicas de React.
+
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["react", "oxc"],

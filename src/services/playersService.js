@@ -1,3 +1,7 @@
+// Servicio encargado de obtener jugadores y estadísticas de goleadores.
+// Combina los datos de jugadores y estadísticas mediante sus IDs para devolver
+// la información completa que necesita mostrar la aplicación.
+
 import { apiRequest } from "../api/apiClient";
 import { ENDPOINTS } from "../api/endpoints";
 

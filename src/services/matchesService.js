@@ -1,3 +1,6 @@
+// Servicio encargado de obtener los partidos desde la API.
+// También relaciona los IDs de los equipos con sus nombres y prepara los datos
+
 import { apiRequest } from "../api/apiClient";
 import { ENDPOINTS } from "../api/endpoints";
 import { getTeams } from "./teamsService";

@@ -1,4 +1,8 @@
-﻿import { useState, useEffect } from "react";
+﻿// Componente principal de la aplicación.
+// Define las rutas, administra el estado de usuario y temporada,
+// y muestra las diferentes secciones de la página de inicio.
+
+import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Footer from "./components/Footer/Footer";
@@ -22,7 +26,7 @@ function Inicio({ esAdmin }) {
 
  useEffect(() => {
   const timer = setTimeout(() => {
-    const elemento = document.getElementById(seccion);
+  const elemento = document.getElementById(seccion);
 
     if (elemento) {
       const posicion =
@@ -44,16 +48,9 @@ function Inicio({ esAdmin }) {
     <main className="contenido">
       <Hero />
 
-      <SelectorTemporada
-          temporada={temporada}
-          onChange={setTemporada}
-        />
+      <SelectorTemporada temporada={temporada} onChange={setTemporada}/>
 
-      <MenuPrincipal
-        seccion={seccion}
-        setSeccion={setSeccion}
-        esAdmin={esAdmin}
-      />
+      <MenuPrincipal seccion={seccion} setSeccion={setSeccion} esAdmin={esAdmin}/>
 
       {seccion === "tabla" && (
         <div id="tabla">
@@ -103,21 +100,13 @@ function App() {
 
   return (
     <div className="app">
-      <Header
-        esAdmin={esAdmin}
-        setEsAdmin={setEsAdmin}
-      />
+      <Header esAdmin={esAdmin} setEsAdmin={setEsAdmin}/>
 
       <Routes>
-        <Route
-          path="/"
-          element={<Inicio esAdmin={esAdmin} />}
-        />
 
-        <Route
-          path="/equipos/:teamId"
-          element={<EquipoDetalle />}
-        />
+        <Route path="/" element={<Inicio esAdmin={esAdmin} />}/>
+        <Route path="/equipos/:teamId" element={<EquipoDetalle />}/>
+        
       </Routes>
 
       <Footer />

@@ -1,3 +1,6 @@
+// Centraliza las peticiones al backend: configura la URL base, realiza la solicitud,
+// controla errores y devuelve la respuesta en formato JSON.
+
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export async function apiRequest(endpoint, options = {}) {

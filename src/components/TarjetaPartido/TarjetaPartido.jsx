@@ -1,3 +1,14 @@
+/*
+ * Componente encargado de mostrar la información básica de un partido.
+ *
+ * - Recibe un objeto "partido" mediante props.
+ * - Determina si el partido ya fue jugado mediante la propiedad "jugado".
+ * - Si el partido terminó, muestra el estado "Finalizado" y el resultado
+ *   con los goles de ambos equipos.
+ * - Si todavía no se jugó, muestra el estado "Próximamente" y "vs"
+ *   en lugar del resultado.
+ */
+
 import "./TarjetaPartido.css";
 
 function TarjetaPartido({ partido }) {
@@ -6,11 +17,8 @@ function TarjetaPartido({ partido }) {
   return (
     <article className="tarjeta-partido">
       <span
-        className={`tarjeta-partido__estado ${
-          jugado
-            ? "tarjeta-partido__estado--jugado"
-            : "tarjeta-partido__estado--pendiente"
-        }`}
+        className={`tarjeta-partido__estado ${jugado ? 
+        "tarjeta-partido__estado--jugado" : "tarjeta-partido__estado--pendiente"}`}
       >
         {jugado ? "Finalizado" : "Próximamente"}
       </span>
@@ -19,14 +27,11 @@ function TarjetaPartido({ partido }) {
         <strong>{partido.teamAName}</strong>
 
         <span className="tarjeta-partido__resultado">
-          {jugado
-            ? `${partido.goalsA} - ${partido.goalsB}`
-            : "vs"}
+          {jugado ? `${partido.goalsA} - ${partido.goalsB}`: "vs"}
         </span>
 
-        <strong className="tarjeta-partido__visitante">
-          {partido.teamBName}
-        </strong>
+        <strong className="tarjeta-partido__visitante"> {partido.teamBName}</strong>
+
       </div>
     </article>
   );

@@ -1,3 +1,6 @@
+// Servicio encargado de obtener información de los equipos desde la API.
+// Centraliza las consultas relacionadas con los equipos.
+
 import { apiRequest } from "../api/apiClient";
 import { ENDPOINTS } from "../api/endpoints";
 

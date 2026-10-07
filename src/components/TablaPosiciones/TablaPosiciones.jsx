@@ -1,18 +1,21 @@
+//Pide los equipos al backend, los ordena según 
+// la tabla de posiciones y después los muestra 
+// en una tabla para PC y en tarjetas para móvil.
+
 import { useEffect, useState } from "react";
 import "./TablaPosiciones.css";
 import { getTeams } from "../../services/teamsService";
 import IdentidadEquipo from "../IdentidadEquipo/IdentidadEquipo";
-import TarjetaPosicion from "../TarjetaPosicion/TarjetaPosicion";
 import { Link } from "react-router-dom";
 
 function ordenarEquipos(equipos) {
   return [...equipos].sort((a, b) => {
-    if (b.points !== a.points) {
-      return b.points - a.points;
+    if (b._points !== a._points) {
+      return b._points - a._points;
     }
 
-    if (b.goalDifference !== a.goalDifference) {
-      return b.goalDifference - a.goalDifference;
+    if (b._goalDifference !== a._goalDifference) {
+      return b._goalDifference - a._goalDifference;
     }
 
     return b.wins - a.wins;
@@ -27,6 +30,8 @@ function TablaPosiciones() {
   useEffect(() => {
     getTeams()
       .then((data) => {
+        console.log(data);
+
         setEquipos(ordenarEquipos(data));
       })
       .catch((err) => {
@@ -79,8 +84,8 @@ function TablaPosiciones() {
                 <span className="nombre-equipo">{equipo.name}</span>
               </Link>
               </td>
-              <td className="puntos">{equipo.points}</td>
-              <td>{equipo.goalDifference}</td>
+              <td className="puntos">{equipo._points}</td>
+              <td>{equipo._goalDifference}</td>
               <td>{equipo.wins + equipo.draws + equipo.losses}</td>
               <td>{equipo.wins}</td>
               <td>{equipo.draws}</td>
@@ -91,16 +96,6 @@ function TablaPosiciones() {
           ))}
         </tbody>
       </table>
-
-      <div className="tabla-mobile">
-        {equipos.map((equipo, index) => (
-          <TarjetaPosicion
-            key={equipo.id_team}
-            equipo={equipo}
-            posicion={index + 1}
-          />
-        ))}
-      </div>
     </div>
   );
 }
