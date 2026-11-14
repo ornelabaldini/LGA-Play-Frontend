@@ -9,6 +9,7 @@ import {
   guardarToken,
   eliminarToken,
 } from "../../api/apiClient";
+import { ENDPOINTS } from "../../api/endpoints";
 import "./Ingresar.css";
 
 function Ingresar({ esAdmin, setEsAdmin }) {
@@ -31,7 +32,7 @@ function Ingresar({ esAdmin, setEsAdmin }) {
     setCargando(true);
 
     try {
-      const respuesta = await apiRequest("/auth/login", {
+      const respuesta = await apiRequest(ENDPOINTS.auth.login, {
         method: "POST",
         body: JSON.stringify({ username, password }),
       });
@@ -61,7 +62,7 @@ function Ingresar({ esAdmin, setEsAdmin }) {
     setCargando(true);
 
     try {
-      await apiRequest("/auth/register", {
+      await apiRequest(ENDPOINTS.auth.register, {
         method: "POST",
         body: JSON.stringify({
           username,

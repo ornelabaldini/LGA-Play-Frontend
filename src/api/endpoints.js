@@ -6,4 +6,8 @@ export const ENDPOINTS = {
   teams: "/teams",
   players: "/players",
   matches: "/matches",
+  auth: {
+    login: "/auth/login",
+    register: "/auth/register",
+  },
 };
