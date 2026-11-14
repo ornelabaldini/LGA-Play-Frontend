@@ -17,6 +17,8 @@ function Ingresar({ esAdmin, setEsAdmin }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // Controla si la contraseña se muestra o se oculta.
+  const [mostrarPassword, setMostrarPassword] = useState(false);
   const [error, setError] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [cargando, setCargando] = useState(false);
@@ -187,21 +189,67 @@ function Ingresar({ esAdmin, setEsAdmin }) {
                 />
               )}
 
-              <input
-                type="password"
-                placeholder="Contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete={
-                  modoFormulario === "ingresar"
-                    ? "current-password"
-                    : "new-password"
-                }
-                minLength={8}
-                maxLength={128}
-                required
-              />
+              {/* Campo de contraseña con opción para mostrarla u ocultarla. */}
+              <div className="modal-ingreso__password">
+                <input
+                  type={mostrarPassword ? "text" : "password"}
+                  placeholder="Contraseña"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete={
+                    modoFormulario === "ingresar"
+                      ? "current-password"
+                      : "new-password"
+                  }
+                  minLength={8}
+                  maxLength={128}
+                  required
+                />
 
+                <button
+                  type="button"
+                  className="modal-ingreso__ver-password"
+                  onClick={() => setMostrarPassword(!mostrarPassword)}
+                  aria-label={mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  aria-pressed={mostrarPassword}
+                >
+                  {mostrarPassword ? (
+                    // Ícono de ojo tachado: la contraseña está visible.
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M3 3l18 18" />
+                      <path d="M10.58 10.58a2 2 0 002.83 2.83" />
+                      <path d="M9.88 5.09A10.94 10.94 0 0112 4.5c5 0 9 4.5 10 7.5a11.8 11.8 0 01-4.17 5.17" />
+                      <path d="M6.61 6.61C4.1 8.03 2.5 10.5 2 12c1 3 5 7.5 10 7.5a10.9 10.9 0 003.39-.54" />
+                    </svg>
+                  ) : (
+                    // Ícono de ojo abierto: la contraseña está oculta.
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M2 12s3.5-7.5 10-7.5S22 12 22 12s-3.5 7.5-10 7.5S2 12 2 12z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
+                </button>
+              </div>
               {error && (
                 <p className="modal-ingreso__error" role="alert">
                   {error}

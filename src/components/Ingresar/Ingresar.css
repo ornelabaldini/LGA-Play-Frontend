@@ -183,3 +183,37 @@
 .modal-ingreso__alternar button:hover {
   text-decoration: underline;
 }
+/* Posiciona el campo de contraseña y el ojo. */
+.modal-ingreso__password {
+  position: relative;
+  width: 100%;
+}
+
+/* Reserva espacio para el ojo dentro del campo. */
+.modal-ingreso__password input {
+  width: 100%;
+  padding-right: 45px;
+  box-sizing: border-box;
+}
+
+/* Centra el ojo dentro del campo de contraseña. */
+.modal-ingreso__ver-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  padding: 5px;
+  cursor: pointer;
+  color: #666;
+}
+
+.modal-ingreso__ver-password svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}

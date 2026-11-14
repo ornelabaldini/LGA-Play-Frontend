@@ -17,6 +17,7 @@ import EquipoDetalle from "./components/EquipoDetalle/EquipoDetalle";
 import MenuPrincipal from "./components/MenuPrincipal/MenuPrincipal";
 import Playoffs from "./components/Playoffs/Playoffs";
 import CargarFecha from "./components/CargarFecha/CargarFecha";
+import AdministrarUsuarios from "./components/AdministrarUsuarios/AdministrarUsuarios";
 
 import "./App.css";
 
@@ -24,33 +25,33 @@ function Inicio({ esAdmin }) {
   const [seccion, setSeccion] = useState("tabla");
   const [temporada, setTemporada] = useState(new Date().getFullYear());
 
- useEffect(() => {
-  const timer = setTimeout(() => {
-  const elemento = document.getElementById(seccion);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const elemento = document.getElementById(seccion);
 
-    if (elemento) {
-      const posicion =
-        elemento.getBoundingClientRect().top +
-        window.scrollY -
-        150;
+      if (elemento) {
+        const posicion =
+          elemento.getBoundingClientRect().top +
+          window.scrollY -
+          150;
 
-      window.scrollTo({
-        top: posicion,
-        behavior: "smooth",
-      });
-    }
-  }, 500);
+        window.scrollTo({
+          top: posicion,
+          behavior: "smooth",
+        });
+      }
+    }, 500);
 
-  return () => clearTimeout(timer);
-}, [seccion]);
+    return () => clearTimeout(timer);
+  }, [seccion]);
 
   return (
     <main className="contenido">
       <Hero />
 
-      <SelectorTemporada temporada={temporada} onChange={setTemporada}/>
+      <SelectorTemporada temporada={temporada} onChange={setTemporada} />
 
-      <MenuPrincipal seccion={seccion} setSeccion={setSeccion} esAdmin={esAdmin}/>
+      <MenuPrincipal seccion={seccion} setSeccion={setSeccion} esAdmin={esAdmin} />
 
       {seccion === "tabla" && (
         <div id="tabla">
@@ -91,6 +92,15 @@ function Inicio({ esAdmin }) {
           </Panel>
         </div>
       )}
+
+      {esAdmin && seccion === "administrarUsuarios" && (
+        <div id="administrarUsuarios">
+          <Panel titulo="Administrar usuarios">
+            <AdministrarUsuarios />
+          </Panel>
+        </div>
+      )}
+      
     </main>
   );
 }
@@ -100,13 +110,13 @@ function App() {
 
   return (
     <div className="app">
-      <Header esAdmin={esAdmin} setEsAdmin={setEsAdmin}/>
+      <Header esAdmin={esAdmin} setEsAdmin={setEsAdmin} />
 
       <Routes>
 
-        <Route path="/" element={<Inicio esAdmin={esAdmin} />}/>
-        <Route path="/equipos/:teamId" element={<EquipoDetalle />}/>
-        
+        <Route path="/" element={<Inicio esAdmin={esAdmin} />} />
+        <Route path="/equipos/:teamId" element={<EquipoDetalle />} />
+
       </Routes>
 
       <Footer />
