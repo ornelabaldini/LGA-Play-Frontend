@@ -9,18 +9,12 @@ function MenuPrincipal({ seccion, setSeccion, esAdmin }) {
   ];
 
   if (esAdmin) {
-    opciones.unshift(
-      {
-        icono: "📝",
-        texto: "Cargar Fecha",
-        seccion: "cargarFecha",
-      },
-      {
-        icono: "👥",
-        texto: "Administrar usuarios",
-        seccion: "administrarUsuarios",
-      }
-    );
+    opciones.unshift({
+      icono: "📝",
+      texto: "Cargar Fecha",
+      seccion: "cargarFecha",
+    });
+
   }
 
   return (

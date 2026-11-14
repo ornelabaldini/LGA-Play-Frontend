@@ -1,4 +1,5 @@
-﻿// Componente principal de la aplicación.
+﻿
+// Componente principal de la aplicación.
 // Define las rutas, administra el estado de usuario y temporada,
 // y muestra las diferentes secciones de la página de inicio.
 
@@ -17,7 +18,6 @@ import EquipoDetalle from "./components/EquipoDetalle/EquipoDetalle";
 import MenuPrincipal from "./components/MenuPrincipal/MenuPrincipal";
 import Playoffs from "./components/Playoffs/Playoffs";
 import CargarFecha from "./components/CargarFecha/CargarFecha";
-import AdministrarUsuarios from "./components/AdministrarUsuarios/AdministrarUsuarios";
 
 import "./App.css";
 
@@ -51,7 +51,11 @@ function Inicio({ esAdmin }) {
 
       <SelectorTemporada temporada={temporada} onChange={setTemporada} />
 
-      <MenuPrincipal seccion={seccion} setSeccion={setSeccion} esAdmin={esAdmin} />
+      <MenuPrincipal
+        seccion={seccion}
+        setSeccion={setSeccion}
+        esAdmin={esAdmin}
+      />
 
       {seccion === "tabla" && (
         <div id="tabla">
@@ -92,15 +96,6 @@ function Inicio({ esAdmin }) {
           </Panel>
         </div>
       )}
-
-      {esAdmin && seccion === "administrarUsuarios" && (
-        <div id="administrarUsuarios">
-          <Panel titulo="Administrar usuarios">
-            <AdministrarUsuarios />
-          </Panel>
-        </div>
-      )}
-      
     </main>
   );
 }
@@ -113,10 +108,8 @@ function App() {
       <Header esAdmin={esAdmin} setEsAdmin={setEsAdmin} />
 
       <Routes>
-
         <Route path="/" element={<Inicio esAdmin={esAdmin} />} />
         <Route path="/equipos/:teamId" element={<EquipoDetalle />} />
-
       </Routes>
 
       <Footer />
