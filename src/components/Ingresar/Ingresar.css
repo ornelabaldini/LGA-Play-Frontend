@@ -153,3 +153,33 @@
     font-size: 20px;
   }
 }
+
+/* Mensaje de registro exitoso. */
+.modal-ingreso__exito {
+  margin: 0;
+  color: #166534;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Alterna entre ingresar y registrarse. */
+.modal-ingreso__alternar {
+  margin-top: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.modal-ingreso__alternar button {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #166534;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modal-ingreso__alternar button:hover {
+  text-decoration: underline;
+}

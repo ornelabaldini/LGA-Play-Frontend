@@ -1,47 +1,122 @@
-﻿import { useState } from "react";
-import { apiRequest } from "../../api/apiClient";
+﻿
+// Administra el registro, inicio y cierre de sesión de los usuarios.
+// Se comunica con el backend para crear cuentas, validar credenciales
+// y determinar si el usuario tiene permisos de administrador.
+
+import { useState } from "react";
+import {
+  apiRequest,
+  guardarToken,
+  eliminarToken,
+} from "../../api/apiClient";
 import "./Ingresar.css";
 
 function Ingresar({ esAdmin, setEsAdmin }) {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [modoFormulario, setModoFormulario] = useState("ingresar");
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [mensaje, setMensaje] = useState("");
   const [cargando, setCargando] = useState(false);
 
+  // Envía las credenciales al backend y valida el usuario.
   const ingresar = async (e) => {
     e.preventDefault();
     setError("");
+    setMensaje("");
     setCargando(true);
 
     try {
-      await apiRequest("/login", {
+      const respuesta = await apiRequest("/auth/login", {
         method: "POST",
         body: JSON.stringify({ username, password }),
       });
 
+      // Verifica si el usuario tiene permisos de administrador.
+      if (respuesta.user.is_admin !== true) {
+        eliminarToken();
+        setError("Tu cuenta no tiene permisos de administrador.");
+        return;
+      }
+
+      // Guarda el token JWT para las próximas solicitudes.
+      guardarToken(respuesta.access_token);
+
+      // Habilita las funciones exclusivas del administrador.
       setEsAdmin(true);
+
       setMostrarFormulario(false);
       setUsername("");
+      setEmail("");
       setPassword("");
-    } catch {
-      setError("Usuario o contraseña incorrectos.");
+    } catch (error) {
+      setError(error.message || "Usuario o contraseña incorrectos.");
     } finally {
       setCargando(false);
     }
   };
 
+  // Registra una cuenta nueva en el backend.
+  const registrar = async (e) => {
+    e.preventDefault();
+    setError("");
+    setMensaje("");
+    setCargando(true);
+
+    try {
+      await apiRequest("/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+        }),
+      });
+
+      // Informa que la cuenta fue creada correctamente.
+      setMensaje("Cuenta creada correctamente. Ya podés iniciar sesión.");
+
+      // Cambia al formulario de ingreso.
+      setModoFormulario("ingresar");
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      setError(error.message || "No se pudo completar el registro.");
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  // Cierra la sesión y elimina el token almacenado.
   const cerrarSesion = () => {
+    eliminarToken();
     setEsAdmin(false);
     setMostrarFormulario(false);
     setUsername("");
+    setEmail("");
     setPassword("");
     setError("");
+    setMensaje("");
   };
 
+  // Abre el formulario de ingreso o registro.
+  const abrirFormulario = (modo) => {
+    setModoFormulario(modo);
+    setMostrarFormulario(true);
+    setError("");
+    setMensaje("");
+  };
+
+  // Cierra el formulario y limpia sus mensajes.
   const cerrarFormulario = () => {
     setMostrarFormulario(false);
     setError("");
+    setMensaje("");
+    setUsername("");
+    setEmail("");
+    setPassword("");
   };
 
   return (
@@ -52,7 +127,7 @@ function Ingresar({ esAdmin, setEsAdmin }) {
           if (esAdmin) {
             cerrarSesion();
           } else {
-            setMostrarFormulario(true);
+            abrirFormulario("ingresar");
           }
         }}
       >
@@ -80,34 +155,104 @@ function Ingresar({ esAdmin, setEsAdmin }) {
               ×
             </button>
 
-            <h2 id="titulo-ingreso">Ingreso de administrador</h2>
-            <p>Ingresá tus credenciales para continuar</p>
+            <h2 id="titulo-ingreso">
+              {modoFormulario === "ingresar"
+                ? "Ingreso de administrador"
+                : "Crear una cuenta"}
+            </h2>
 
-            <form onSubmit={ingresar}>
+            <p>
+              {modoFormulario === "ingresar"
+                ? "Ingresá tus credenciales para continuar"
+                : "Completá tus datos para registrarte"}
+            </p>
+
+            <form
+              onSubmit={
+                modoFormulario === "ingresar" ? ingresar : registrar
+              }
+            >
               <input
                 type="text"
                 placeholder="Usuario"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 autoComplete="username"
+                minLength={3}
+                maxLength={40}
                 required
               />
+
+              {modoFormulario === "registrar" && (
+                <input
+                  type="email"
+                  placeholder="Correo electrónico"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  required
+                />
+              )}
 
               <input
                 type="password"
                 placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
+                autoComplete={
+                  modoFormulario === "ingresar"
+                    ? "current-password"
+                    : "new-password"
+                }
+                minLength={8}
+                maxLength={128}
                 required
               />
 
-              {error && <p className="modal-ingreso__error" role="alert">{error}</p>}
+              {error && (
+                <p className="modal-ingreso__error" role="alert">
+                  {error}
+                </p>
+              )}
+
+              {mensaje && (
+                <p className="modal-ingreso__exito" role="status">
+                  {mensaje}
+                </p>
+              )}
 
               <button type="submit" disabled={cargando}>
-                {cargando ? "Ingresando..." : "Iniciar sesión"}
+                {cargando
+                  ? "Procesando..."
+                  : modoFormulario === "ingresar"
+                    ? "Iniciar sesión"
+                    : "Registrarme"}
               </button>
             </form>
+
+            <div className="modal-ingreso__alternar">
+              {modoFormulario === "ingresar" ? (
+                <>
+                  ¿No tenés cuenta?{" "}
+                  <button
+                    type="button"
+                    onClick={() => abrirFormulario("registrar")}
+                  >
+                    Registrate
+                  </button>
+                </>
+              ) : (
+                <>
+                  ¿Ya tenés cuenta?{" "}
+                  <button
+                    type="button"
+                    onClick={() => abrirFormulario("ingresar")}
+                  >
+                    Ingresá
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}
