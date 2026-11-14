@@ -34,18 +34,11 @@ function Ingresar({ esAdmin, setEsAdmin }) {
         body: JSON.stringify({ username, password }),
       });
 
-      // Verifica si el usuario tiene permisos de administrador.
-      if (respuesta.user.is_admin !== true) {
-        eliminarToken();
-        setError("Tu cuenta no tiene permisos de administrador.");
-        return;
-      }
-
       // Guarda el token JWT para las próximas solicitudes.
       guardarToken(respuesta.access_token);
 
-      // Habilita las funciones exclusivas del administrador.
-      setEsAdmin(true);
+      // Establece los permisos según el tipo de cuenta.
+      setEsAdmin(respuesta.user.is_admin === true);
 
       setMostrarFormulario(false);
       setUsername("");
@@ -261,3 +254,5 @@ function Ingresar({ esAdmin, setEsAdmin }) {
 }
 
 export default Ingresar;
+
+
