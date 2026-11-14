@@ -8,6 +8,5 @@ export const ENDPOINTS = {
   matches: "/matches",
   auth: {
     login: "/auth/login",
-    register: "/auth/register",
   },
 };
