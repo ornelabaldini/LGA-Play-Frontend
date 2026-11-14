@@ -69,7 +69,7 @@ function Ingresar({ esAdmin, setEsAdmin }) {
       });
 
       // Informa que la cuenta fue creada correctamente.
-      setMensaje("Cuenta creada correctamente. Ya podés iniciar sesión.");
+      setMensaje("¡Bienvenido a LGA-Play! ⚽ Tu cuenta fue creada exitosamente. Ya podés iniciar sesión y disfrutar de la plataforma.");
 
       // Cambia al formulario de ingreso.
       setModoFormulario("ingresar");
@@ -254,5 +254,6 @@ function Ingresar({ esAdmin, setEsAdmin }) {
 }
 
 export default Ingresar;
+
 
 
