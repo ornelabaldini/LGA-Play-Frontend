@@ -134,9 +134,10 @@ function CargarFecha() {
     }));
   }
 
+  // Busca al jugador utilizando el identificador que entrega el backend.
   function obtenerNombreJugador(jugadorId) {
     const jugador = jugadores.find(
-      (j) => Number(j.id) === Number(jugadorId)
+      (j) => Number(j.id_person) === Number(jugadorId)
     );
 
     return jugador?.name || `Jugador ${jugadorId}`;
@@ -200,13 +201,23 @@ function CargarFecha() {
         [partidoId]: "",
       }));
 
+      // Enviamos los goleadores con el formato que exige el backend:
+      // player_id, team_id y own_goal.
       await actualizarResultado(partidoId, {
-        goalsA: golesLocal,
-        goalsB: golesVisitante,
         scorers: [
-          ...goleadoresLocal,
-          ...goleadoresVisitante,
+          ...goleadoresLocal.map((playerId) => ({
+            player_id: playerId,
+            team_id: partido.teamA_id,
+            own_goal: false,
+          })),
+          ...goleadoresVisitante.map((playerId) => ({
+            player_id: playerId,
+            team_id: partido.teamB_id,
+            own_goal: false,
+          })),
         ],
+
+        // El backend espera listas de IDs de jugadores para las tarjetas.
         yellow_cards: [
           ...(resultado.amarillasLocal || []),
           ...(resultado.amarillasVisitante || []),
@@ -270,12 +281,13 @@ function CargarFecha() {
             {cantidadGoles === 0
               ? "Primero cargá los goles"
               : limiteAlcanzado
-              ? "Máximo de goleadores alcanzado"
-              : "Seleccionar goleador"}
+                ? "Máximo de goleadores alcanzado"
+                : "Seleccionar goleador"}
           </option>
 
+          {/* Usamos id_person, que es el identificador del jugador en el backend. */}
           {jugadoresEquipo.map((jugador) => (
-            <option key={jugador.id} value={jugador.id}>
+            <option key={jugador.id_person} value={jugador.id_person}>
               {jugador.name}
             </option>
           ))}
@@ -341,8 +353,9 @@ function CargarFecha() {
         >
           <option value="">Seleccionar jugador</option>
 
+          {/* Usamos id_person, que es el identificador del jugador en el backend. */}
           {jugadoresEquipo.map((jugador) => (
-            <option key={jugador.id} value={jugador.id}>
+            <option key={jugador.id_person} value={jugador.id_person}>
               {jugador.name}
             </option>
           ))}
@@ -380,9 +393,9 @@ function CargarFecha() {
 
   const partidosFiltrados = fechaSeleccionada
     ? partidos.filter(
-        (partido) =>
-          String(partido.matchday) === String(fechaSeleccionada)
-      )
+      (partido) =>
+        String(partido.matchday) === String(fechaSeleccionada)
+    )
     : [];
 
   return (
@@ -413,9 +426,8 @@ function CargarFecha() {
 
         return (
           <div
-            className={`resultado-partido ${
-              bloqueado ? "resultado-partido--bloqueado" : ""
-            }`}
+            className={`resultado-partido ${bloqueado ? "resultado-partido--bloqueado" : ""
+              }`}
             key={partido.id_match}
           >
             <div className="partido-encabezado">

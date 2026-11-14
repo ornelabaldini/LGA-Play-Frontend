@@ -1,38 +1,44 @@
-// Servicio encargado de obtener jugadores y estadísticas de goleadores.
-// Combina los datos de jugadores y estadísticas mediante sus IDs para devolver
-// la información completa que necesita mostrar la aplicación.
 
 import { apiRequest } from "../api/apiClient";
 import { ENDPOINTS } from "../api/endpoints";
 
-export function getPlayers() {
-  return apiRequest(ENDPOINTS.players);
+// Obtiene todos los jugadores registrados en el backend.
+export async function getPlayers() {
+  const respuesta = await apiRequest(ENDPOINTS.players);
+
+  return Array.isArray(respuesta) ? respuesta : respuesta?.value ?? [];
 }
 
+// Obtiene un jugador específico por su ID.
 export function getPlayerById(id) {
   return apiRequest(`${ENDPOINTS.players}/${id}`);
 }
 
+// Obtiene los goleadores de una temporada.
 export async function getScorers(seasonId) {
   const [estadisticas, jugadores] = await Promise.all([
-    apiRequest(`${ENDPOINTS.scorers}/${seasonId}/top-scorers`),
+    apiRequest(`/matches/season/${seasonId}/top-scorers`),
     getPlayers(),
   ]);
 
   const jugadoresPorId = new Map(
-    jugadores.map((jugador) => [jugador.id, jugador])
+    jugadores.map((jugador) => [jugador.id_person ?? jugador.id, jugador])
   );
 
-  return estadisticas.map((estadistica) => {
-    const jugador = jugadoresPorId.get(estadistica.player_id);
+  const listaEstadisticas = Array.isArray(estadisticas)
+    ? estadisticas
+    : estadisticas?.value ?? [];
+
+  return listaEstadisticas.map(([playerId, goals]) => {
+    const jugador = jugadoresPorId.get(playerId);
 
     return {
-      id: estadistica.player_id,
-      name: jugador?.name || `Jugador ${estadistica.player_id}`,
-      position: jugador?.position || "",
-      goals: estadistica.goals,
-      yellow_cards: estadistica.yellow_cards,
-      red_cards: estadistica.red_cards,
+      id: playerId,
+      name: jugador?.name ?? `Jugador ${playerId}`,
+      position: jugador?.position ?? "",
+      goals,
+      yellow_cards: 0,
+      red_cards: 0,
     };
   });
 }

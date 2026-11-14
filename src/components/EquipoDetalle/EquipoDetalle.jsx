@@ -54,7 +54,7 @@ function EquipoDetalle() {
               <p>Posición actual del campeonato</p>
             </div>
 
-            <strong>{equipo.points} pts</strong>
+            <span><small>DG</small>{equipo._goalDifference}</span>
           </header>
 
           <div className="equipo-detalle__estadisticas">

@@ -2,12 +2,17 @@ import { useEffect, useState } from "react";
 import { getTeams } from "../../services/teamsService";
 import "./Playoffs.css";
 
+// Ordena los equipos según los criterios de clasificación:
+// primero puntos, después diferencia de gol y finalmente partidos ganados.
+
 function ordenarEquipos(equipos) {
   return [...equipos].sort((a, b) => {
-    if (b.points !== a.points) return b.points - a.points;
+    if (b._points !== a._points) {
+      return b._points - a._points;
+    }
 
-    if (b.goalDifference !== a.goalDifference) {
-      return b.goalDifference - a.goalDifference;
+    if (b._goalDifference !== a._goalDifference) {
+      return b._goalDifference - a._goalDifference;
     }
 
     return b.wins - a.wins;
