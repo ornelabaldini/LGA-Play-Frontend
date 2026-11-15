@@ -68,7 +68,7 @@ function Inicio({ esAdmin }) {
       {seccion === "partidos" && (
         <div id="partidos">
           <Panel titulo="⚽ Fixture">
-            <Partidos />
+            <Partidos temporada={temporada} />
           </Panel>
         </div>
       )}
@@ -92,7 +92,7 @@ function Inicio({ esAdmin }) {
       {esAdmin && seccion === "cargarFecha" && (
         <div id="cargarFecha">
           <Panel titulo="Cargar Fecha">
-            <CargarFecha />
+            <CargarFecha temporada={temporada} />
           </Panel>
         </div>
       )}

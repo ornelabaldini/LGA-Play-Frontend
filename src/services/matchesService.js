@@ -3,17 +3,13 @@ import { apiRequest } from "../api/apiClient";
 import { ENDPOINTS } from "../api/endpoints";
 import { getTeams } from "./teamsService";
 
-// Obtiene todos los partidos de las 22 fechas.
-// El backend no tiene un endpoint general GET /matches,
-// por eso consultamos cada fecha por separado.
-export async function getMatches() {
+export async function getMatches(season) {
   const fechas = await Promise.all(
     Array.from({ length: 22 }, (_, i) =>
-      apiRequest(ENDPOINTS.matchday(i + 1))
+      apiRequest(ENDPOINTS.matchday(i + 1, season))
     )
   );
 
-  // El backend devuelve los partidos dentro de la propiedad value.
   return fechas.flatMap((respuesta) =>
     Array.isArray(respuesta) ? respuesta : respuesta?.value ?? []
   );
@@ -27,9 +23,9 @@ export function getMatchById(id) {
 // Obtiene los partidos y los equipos para mostrar sus nombres.
 // También normaliza los datos del partido para que los componentes
 // puedan utilizar siempre las mismas propiedades.
-export async function getMatchesWithTeams() {
+export async function getMatchesWithTeams(season) {
   const [partidos, equipos] = await Promise.all([
-    getMatches(),
+    getMatches(season),
     getTeams(),
   ]);
 

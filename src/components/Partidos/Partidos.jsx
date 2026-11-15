@@ -3,14 +3,14 @@ import { getMatchesWithTeams } from "../../services/matchesService";
 import TarjetaPartido from "../TarjetaPartido/TarjetaPartido";
 import "./Partidos.css";
 
-function Partidos() {
+function Partidos({ temporada }) {
   const [partidos, setPartidos] = useState([]);
   const [fechaSeleccionada, setFechaSeleccionada] = useState("todas");
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    getMatchesWithTeams()
+    getMatchesWithTeams(temporada)
       .then((data) => {
         setPartidos(data);
       })
@@ -20,7 +20,7 @@ function Partidos() {
       .finally(() => {
         setCargando(false);
       });
-  }, []);
+  }, [temporada]);
 
   if (cargando) {
     return <p>Cargando partidos...</p>;
@@ -34,9 +34,9 @@ function Partidos() {
     fechaSeleccionada === "todas"
       ? partidos
       : partidos.filter(
-          (partido) =>
-            partido.matchday === Number(fechaSeleccionada)
-        );
+        (partido) =>
+          partido.matchday === Number(fechaSeleccionada)
+      );
 
   const fechas = partidosFiltrados.reduce((resultado, partido) => {
     const fecha = partido.matchday;

@@ -9,7 +9,7 @@ export const ENDPOINTS = {
   auth: {
     login: "/auth/login",
   },
-  matchday: (number) => `/matches/matchday/${number}`,
+  matchday: (number, season) => `/matches/matchday/${number}?season=${season}`,
   matchById: (id) => `/matches/${id}`,
   topScorers: (seasonId) => `/matches/season/${seasonId}/top-scorers`,
   playerById: (id) => `/players/${id}`,

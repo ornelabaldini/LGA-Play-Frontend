@@ -4,7 +4,7 @@ import { getPlayers } from "../../services/playersService";
 import { actualizarResultado } from "../../services/resultadosService";
 import "./CargarFecha.css";
 
-function CargarFecha() {
+function CargarFecha({ temporada }) {
   const [partidos, setPartidos] = useState([]);
   const [jugadores, setJugadores] = useState([]);
   const [fechaSeleccionada, setFechaSeleccionada] = useState("");
@@ -14,12 +14,17 @@ function CargarFecha() {
 
   useEffect(() => {
     cargarDatos();
-  }, []);
+  }, [temporada]);
 
   async function cargarDatos() {
+    setFechaSeleccionada("");
+    setResultados({});
+    setErroresGuardado({});
+    setPartidosBloqueados({});
+
     try {
       const [partidosData, jugadoresData] = await Promise.all([
-        getMatchesWithTeams(),
+        getMatchesWithTeams(temporada),
         getPlayers(),
       ]);
 
