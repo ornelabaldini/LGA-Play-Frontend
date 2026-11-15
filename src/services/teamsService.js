@@ -12,5 +12,5 @@ export async function getTeams() {
 }
 
 export function getTeamById(id) {
-  return apiRequest(`${ENDPOINTS.teams}/${id}`);
+  return apiRequest(ENDPOINTS.teamById(id));
 }

@@ -1,5 +1,6 @@
 
 import { apiRequest } from "../api/apiClient";
+import { ENDPOINTS } from "../api/endpoints";
 import { getTeams } from "./teamsService";
 
 // Obtiene todos los partidos de las 22 fechas.
@@ -8,7 +9,7 @@ import { getTeams } from "./teamsService";
 export async function getMatches() {
   const fechas = await Promise.all(
     Array.from({ length: 22 }, (_, i) =>
-      apiRequest(`/matches/matchday/${i + 1}`)
+      apiRequest(ENDPOINTS.matchday(i + 1))
     )
   );
 
@@ -20,7 +21,7 @@ export async function getMatches() {
 
 // Obtiene un partido específico por su ID.
 export function getMatchById(id) {
-  return apiRequest(`/matches/${id}`);
+  return apiRequest(ENDPOINTS.matchById(id));
 }
 
 // Obtiene los partidos y los equipos para mostrar sus nombres.

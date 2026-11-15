@@ -11,13 +11,13 @@ export async function getPlayers() {
 
 // Obtiene un jugador específico por su ID.
 export function getPlayerById(id) {
-  return apiRequest(`${ENDPOINTS.players}/${id}`);
+  return apiRequest(ENDPOINTS.playerById(id));
 }
 
 // Obtiene los goleadores de una temporada.
 export async function getScorers(seasonId) {
   const [estadisticas, jugadores] = await Promise.all([
-    apiRequest(`/matches/season/${seasonId}/top-scorers`),
+    apiRequest(ENDPOINTS.topScorers(seasonId)),
     getPlayers(),
   ]);
 

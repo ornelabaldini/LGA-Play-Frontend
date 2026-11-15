@@ -9,4 +9,10 @@ export const ENDPOINTS = {
   auth: {
     login: "/auth/login",
   },
+  matchday: (number) => `/matches/matchday/${number}`,
+  matchById: (id) => `/matches/${id}`,
+  topScorers: (seasonId) => `/matches/season/${seasonId}/top-scorers`,
+  playerById: (id) => `/players/${id}`,
+  teamById: (id) => `/teams/${id}`,
+  updateMatchResult: (idMatch) => `/matches/${idMatch}/result`,
 };
