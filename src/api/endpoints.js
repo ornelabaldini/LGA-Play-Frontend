@@ -12,6 +12,7 @@ export const ENDPOINTS = {
   matchday: (number, season) => `/matches/matchday/${number}?season=${season}`,
   matchById: (id) => `/matches/${id}`,
   topScorers: (seasonId) => `/matches/season/${seasonId}/top-scorers`,
+  standings: (season) => `/matches/standings/${season}`,
   playerById: (id) => `/players/${id}`,
   teamById: (id) => `/teams/${id}`,
   updateMatchResult: (idMatch) => `/matches/${idMatch}/result`,

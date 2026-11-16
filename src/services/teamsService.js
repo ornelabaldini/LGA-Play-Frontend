@@ -14,3 +14,9 @@ export async function getTeams() {
 export function getTeamById(id) {
   return apiRequest(ENDPOINTS.teamById(id));
 }
+
+export async function getStandings(temporada) {
+  const respuesta = await apiRequest(ENDPOINTS.standings(temporada));
+
+  return Array.isArray(respuesta) ? respuesta : respuesta?.value ?? [];
+}

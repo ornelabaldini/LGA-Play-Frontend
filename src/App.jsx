@@ -60,7 +60,7 @@ function Inicio({ esAdmin }) {
       {seccion === "tabla" && (
         <div id="tabla">
           <Panel titulo="">
-            <TablaPosiciones />
+            <TablaPosiciones temporada={temporada} />
           </Panel>
         </div>
       )}

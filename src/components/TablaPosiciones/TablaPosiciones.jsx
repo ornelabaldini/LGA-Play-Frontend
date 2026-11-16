@@ -4,34 +4,34 @@
 
 import { useEffect, useState } from "react";
 import "./TablaPosiciones.css";
-import { getTeams } from "../../services/teamsService";
+import { getStandings } from "../../services/teamsService";
 import IdentidadEquipo from "../IdentidadEquipo/IdentidadEquipo";
 import { Link } from "react-router-dom";
 
 function ordenarEquipos(equipos) {
   return [...equipos].sort((a, b) => {
-    if (b._points !== a._points) {
-      return b._points - a._points;
+    if (b.points !== a.points) {
+      return b.points - a.points;
     }
 
-    if (b._goalDifference !== a._goalDifference) {
-      return b._goalDifference - a._goalDifference;
+    if (b.goal_difference !== a.goal_difference) {
+      return b.goal_difference - a.goal_difference;
     }
 
     return b.wins - a.wins;
   });
 }
 
-function TablaPosiciones() {
+function TablaPosiciones({ temporada }) {
   const [equipos, setEquipos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    getTeams()
-      .then((data) => {
-        console.log(data);
+    setCargando(true);
 
+    getStandings(temporada)
+      .then((data) => {
         setEquipos(ordenarEquipos(data));
       })
       .catch((err) => {
@@ -40,7 +40,7 @@ function TablaPosiciones() {
       .finally(() => {
         setCargando(false);
       });
-  }, []);
+  }, [temporada]);
 
   if (cargando) {
     return <p>Cargando equipos...</p>;
@@ -73,25 +73,25 @@ function TablaPosiciones() {
             <tr key={equipo.id_team}>
               <td>{index + 1}</td>
               <td>
-              <Link
-                to={`/equipos/${equipo.id_team}`}
-                className="equipo-enlace"
-              >
-                <IdentidadEquipo
-                  teamId={equipo.id_team}
-                  teamName={equipo.name}
-                />
-                <span className="nombre-equipo">{equipo.name}</span>
-              </Link>
+                <Link
+                  to={`/equipos/${equipo.id_team}`}
+                  className="equipo-enlace"
+                >
+                  <IdentidadEquipo
+                    teamId={equipo.id_team}
+                    teamName={equipo.name}
+                  />
+                  <span className="nombre-equipo">{equipo.name}</span>
+                </Link>
               </td>
-              <td className="puntos">{equipo._points}</td>
-              <td>{equipo._goalDifference}</td>
-              <td>{equipo.wins + equipo.draws + equipo.losses}</td>
+              <td className="puntos">{equipo.points}</td>
+              <td>{equipo.goal_difference}</td>
+              <td>{equipo.played}</td>
               <td>{equipo.wins}</td>
               <td>{equipo.draws}</td>
               <td>{equipo.losses}</td>
-              <td>0</td>
-              <td>0</td>
+              <td>{equipo.gf}</td>
+              <td>{equipo.ga}</td>
             </tr>
           ))}
         </tbody>
