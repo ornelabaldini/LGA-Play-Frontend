@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { getMatchesWithTeams } from "../../services/matchesService";
 import { getPlayers } from "../../services/playersService";
@@ -16,11 +17,24 @@ function CargarFecha({ temporada }) {
     cargarDatos();
   }, [temporada]);
 
+  function agruparGoleadores(goleadores) {
+    const agrupados = {};
+
+    goleadores.forEach((g) => {
+      const id = Number(g.player_id);
+      agrupados[id] = (agrupados[id] || 0) + 1;
+    });
+
+    return Object.entries(agrupados).map(([playerId, cantidad]) => ({
+      playerId: Number(playerId),
+      cantidad,
+    }));
+  }
+
   async function cargarDatos() {
     setFechaSeleccionada("");
     setResultados({});
     setErroresGuardado({});
-    setPartidosBloqueados({});
 
     try {
       const [partidosData, jugadoresData] = await Promise.all([
@@ -30,6 +44,47 @@ function CargarFecha({ temporada }) {
 
       setPartidos(partidosData);
       setJugadores(jugadoresData);
+
+      setPartidosBloqueados(
+        Object.fromEntries(
+          partidosData.map((partido) => [
+            partido.id_match,
+            Boolean(partido.jugado),
+          ])
+        )
+      );
+
+      setResultados(
+        Object.fromEntries(
+          partidosData.map((partido) => {
+            const goleadores = partido.scorers || [];
+
+            return [
+              partido.id_match,
+              {
+                golesLocal: partido.goalsA ?? 0,
+                golesVisitante: partido.goalsB ?? 0,
+                goleadoresLocal: agruparGoleadores(
+                  goleadores.filter(
+                    (g) =>
+                      Number(g.team_id) === Number(partido.teamA_id)
+                  )
+                ),
+                goleadoresVisitante: agruparGoleadores(
+                  goleadores.filter(
+                    (g) =>
+                      Number(g.team_id) === Number(partido.teamB_id)
+                  )
+                ),
+                amarillasLocal: [],
+                amarillasVisitante: [],
+                rojasLocal: [],
+                rojasVisitante: [],
+              },
+            ];
+          })
+        )
+      );
     } catch (error) {
       console.error("Error cargando datos:", error);
     }
@@ -45,32 +100,12 @@ function CargarFecha({ temporada }) {
     setResultados((prev) => {
       const resultadoActual = prev[partidoId] || {};
 
-      const nuevoResultado = {
-        ...resultadoActual,
-        [campo]: valor,
-      };
-
-      if (campo === "golesLocal") {
-        const cantidadGoles = Number(valor || 0);
-        const goleadores = resultadoActual.goleadoresLocal || [];
-        nuevoResultado.goleadoresLocal = goleadores.slice(
-          0,
-          cantidadGoles
-        );
-      }
-
-      if (campo === "golesVisitante") {
-        const cantidadGoles = Number(valor || 0);
-        const goleadores = resultadoActual.goleadoresVisitante || [];
-        nuevoResultado.goleadoresVisitante = goleadores.slice(
-          0,
-          cantidadGoles
-        );
-      }
-
       return {
         ...prev,
-        [partidoId]: nuevoResultado,
+        [partidoId]: {
+          ...resultadoActual,
+          [campo]: valor,
+        },
       };
     });
 
@@ -81,8 +116,7 @@ function CargarFecha({ temporada }) {
   }
 
   function agregarEvento(partidoId, campo, jugadorId) {
-    if (!jugadorId) return;
-    if (partidosBloqueados[partidoId]) return;
+    if (!jugadorId || partidosBloqueados[partidoId]) return;
 
     setResultados((prev) => {
       const resultadoActual = prev[partidoId] || {};
@@ -92,14 +126,36 @@ function CargarFecha({ temporada }) {
         campo === "goleadoresLocal" ||
         campo === "goleadoresVisitante"
       ) {
+        if (
+          eventosActuales.some(
+            (g) => Number(g.playerId) === Number(jugadorId)
+          )
+        ) {
+          return prev;
+        }
+
         const cantidadMaxima =
           campo === "goleadoresLocal"
             ? Number(resultadoActual.golesLocal || 0)
             : Number(resultadoActual.golesVisitante || 0);
 
-        if (eventosActuales.length >= cantidadMaxima) {
-          return prev;
-        }
+        const golesAsignados = eventosActuales.reduce(
+          (total, g) => total + Number(g.cantidad || 0),
+          0
+        );
+
+        if (golesAsignados >= cantidadMaxima) return prev;
+
+        return {
+          ...prev,
+          [partidoId]: {
+            ...resultadoActual,
+            [campo]: [
+              ...eventosActuales,
+              { playerId: Number(jugadorId), cantidad: 1 },
+            ],
+          },
+        };
       }
 
       return {
@@ -107,6 +163,51 @@ function CargarFecha({ temporada }) {
         [partidoId]: {
           ...resultadoActual,
           [campo]: [...eventosActuales, Number(jugadorId)],
+        },
+      };
+    });
+
+    setErroresGuardado((prev) => ({
+      ...prev,
+      [partidoId]: "",
+    }));
+  }
+
+  function actualizarCantidadGoles(
+    partidoId,
+    campo,
+    jugadorId,
+    cantidad
+  ) {
+    const nuevaCantidad = Math.max(0, Number(cantidad) || 0);
+
+    setResultados((prev) => {
+      const resultadoActual = prev[partidoId] || {};
+      const goleadores = resultadoActual[campo] || [];
+
+      const totalOtros = goleadores
+        .filter((g) => g.playerId !== jugadorId)
+        .reduce((total, g) => total + g.cantidad, 0);
+
+      const campoMarcador =
+        campo === "goleadoresLocal"
+          ? "golesLocal"
+          : "golesVisitante";
+
+      const maximo = Math.max(
+        0,
+        Number(resultadoActual[campoMarcador] || 0) - totalOtros
+      );
+
+      return {
+        ...prev,
+        [partidoId]: {
+          ...resultadoActual,
+          [campo]: goleadores.map((g) =>
+            g.playerId === jugadorId
+              ? { ...g, cantidad: Math.min(nuevaCantidad, maximo) }
+              : g
+          ),
         },
       };
     });
@@ -139,27 +240,12 @@ function CargarFecha({ temporada }) {
     }));
   }
 
-  // Busca al jugador utilizando el identificador que entrega el backend.
   function obtenerNombreJugador(jugadorId) {
     const jugador = jugadores.find(
       (j) => Number(j.id_player) === Number(jugadorId)
     );
 
     return jugador?.name || `Jugador ${jugadorId}`;
-  }
-
-  function obtenerJugadoresEquipo() {
-    return jugadores;
-  }
-
-  function contarGoleadores(goleadores) {
-    const conteo = {};
-
-    goleadores.forEach((jugadorId) => {
-      conteo[jugadorId] = (conteo[jugadorId] || 0) + 1;
-    });
-
-    return conteo;
   }
 
   function modificarPartido(partidoId) {
@@ -182,20 +268,28 @@ function CargarFecha({ temporada }) {
     const goleadoresLocal = resultado.goleadoresLocal || [];
     const goleadoresVisitante = resultado.goleadoresVisitante || [];
 
-    if (goleadoresLocal.length !== golesLocal) {
+    const totalLocal = goleadoresLocal.reduce(
+      (total, g) => total + Number(g.cantidad || 0),
+      0
+    );
+
+    const totalVisitante = goleadoresVisitante.reduce(
+      (total, g) => total + Number(g.cantidad || 0),
+      0
+    );
+
+    if (totalLocal !== golesLocal) {
       setErroresGuardado((prev) => ({
         ...prev,
-        [partidoId]:
-          `El equipo local tiene ${golesLocal} gol(es), pero cargaste ${goleadoresLocal.length} goleador(es).`,
+        [partidoId]: `El equipo local tiene ${golesLocal} gol(es), pero asignaste ${totalLocal}.`,
       }));
       return;
     }
 
-    if (goleadoresVisitante.length !== golesVisitante) {
+    if (totalVisitante !== golesVisitante) {
       setErroresGuardado((prev) => ({
         ...prev,
-        [partidoId]:
-          `El equipo visitante tiene ${golesVisitante} gol(es), pero cargaste ${goleadoresVisitante.length} goleador(es).`,
+        [partidoId]: `El equipo visitante tiene ${golesVisitante} gol(es), pero asignaste ${totalVisitante}.`,
       }));
       return;
     }
@@ -206,32 +300,38 @@ function CargarFecha({ temporada }) {
         [partidoId]: "",
       }));
 
-      // Enviamos los goleadores con el formato que exige el backend:
-      // player_id, team_id y own_goal.
-      await actualizarResultado(partidoId, {
-        scorers: [
-          ...goleadoresLocal.map((playerId) => ({
-            player_id: playerId,
-            team_id: partido.teamA_id,
-            own_goal: false,
-          })),
-          ...goleadoresVisitante.map((playerId) => ({
-            player_id: playerId,
-            team_id: partido.teamB_id,
-            own_goal: false,
-          })),
-        ],
+      const payload = {
+  scorers: [
+    ...goleadoresLocal.flatMap((g) =>
+      Array.from({ length: Number(g.cantidad) }, () => ({
+        player_id: Number(g.playerId),
+        team_id: partido.teamA_id,
+        own_goal: false,
+      }))
+    ),
+    ...goleadoresVisitante.flatMap((g) =>
+      Array.from({ length: Number(g.cantidad) }, () => ({
+        player_id: Number(g.playerId),
+        team_id: partido.teamB_id,
+        own_goal: false,
+      }))
+    ),
+  ],
+  yellow_cards: [
+    ...(resultado.amarillasLocal || []),
+    ...(resultado.amarillasVisitante || []),
+  ],
+  red_cards: [
+    ...(resultado.rojasLocal || []),
+    ...(resultado.rojasVisitante || []),
+  ],
+};
 
-        // El backend espera listas de IDs de jugadores para las tarjetas.
-        yellow_cards: [
-          ...(resultado.amarillasLocal || []),
-          ...(resultado.amarillasVisitante || []),
-        ],
-        red_cards: [
-          ...(resultado.rojasLocal || []),
-          ...(resultado.rojasVisitante || []),
-        ],
-      });
+console.log("DATOS ENVIADOS:", payload);
+
+const respuesta = await actualizarResultado(partidoId, payload);
+
+console.log("RESPUESTA DEL BACKEND:", respuesta);
 
       setPartidosBloqueados((prev) => ({
         ...prev,
@@ -242,6 +342,8 @@ function CargarFecha({ temporada }) {
         ...prev,
         [partidoId]: "Resultado guardado correctamente.",
       }));
+
+      await cargarDatos();
     } catch (error) {
       console.error("Error guardando resultado:", error);
 
@@ -258,7 +360,6 @@ function CargarFecha({ temporada }) {
     goleadores,
     campo
   ) {
-    const conteo = contarGoleadores(goleadores);
     const resultado = resultados[partidoId] || {};
 
     const cantidadGoles =
@@ -266,18 +367,18 @@ function CargarFecha({ temporada }) {
         ? Number(resultado.golesLocal || 0)
         : Number(resultado.golesVisitante || 0);
 
-    const limiteAlcanzado = goleadores.length >= cantidadGoles;
+    const totalAsignado = goleadores.reduce(
+      (total, g) => total + Number(g.cantidad || 0),
+      0
+    );
+
     const bloqueado = partidosBloqueados[partidoId];
 
     return (
       <>
         <select
           value=""
-          disabled={
-            bloqueado ||
-            cantidadGoles === 0 ||
-            limiteAlcanzado
-          }
+          disabled={bloqueado || cantidadGoles === 0}
           onChange={(e) =>
             agregarEvento(partidoId, campo, e.target.value)
           }
@@ -285,45 +386,56 @@ function CargarFecha({ temporada }) {
           <option value="">
             {cantidadGoles === 0
               ? "Primero cargá los goles"
-              : limiteAlcanzado
-                ? "Máximo de goleadores alcanzado"
-                : "Seleccionar goleador"}
+              : "Seleccionar goleador"}
           </option>
 
-          {/* Usamos id_player, que es el identificador del jugador en el backend. */}
           {jugadoresEquipo.map((jugador) => (
-            <option key={jugador.id_player} value={jugador.id_player}>
+            <option
+              key={jugador.id_player}
+              value={jugador.id_player}
+              disabled={goleadores.some(
+                (g) =>
+                  Number(g.playerId) === Number(jugador.id_player)
+              )}
+            >
               {jugador.name}
             </option>
           ))}
         </select>
 
         <div className="contador-eventos">
-          {goleadores.length} / {cantidadGoles}
+          {totalAsignado} / {cantidadGoles} goles asignados
         </div>
 
         {goleadores.length > 0 && (
           <div className="eventos-cargados">
-            {[...new Set(goleadores)].map((jugadorId) => (
-              <div
-                className="evento-item"
-                key={jugadorId}
-              >
-                <span>
-                  {obtenerNombreJugador(jugadorId)}
-                  {conteo[jugadorId] > 1 &&
-                    ` (${conteo[jugadorId]})`}
-                </span>
+            {goleadores.map((g, indice) => (
+              <div className="evento-item" key={g.playerId}>
+                <span>{obtenerNombreJugador(g.playerId)}</span>
+
+                <input
+                  type="number"
+                  min="0"
+                  max={cantidadGoles}
+                  value={g.cantidad}
+                  disabled={bloqueado}
+                  onChange={(e) =>
+                    actualizarCantidadGoles(
+                      partidoId,
+                      campo,
+                      g.playerId,
+                      e.target.value
+                    )
+                  }
+                />
+
+                <span>gol(es)</span>
 
                 <button
                   type="button"
                   disabled={bloqueado}
                   onClick={() =>
-                    eliminarEvento(
-                      partidoId,
-                      campo,
-                      goleadores.indexOf(jugadorId)
-                    )
+                    eliminarEvento(partidoId, campo, indice)
                   }
                 >
                   ×
@@ -358,7 +470,6 @@ function CargarFecha({ temporada }) {
         >
           <option value="">Seleccionar jugador</option>
 
-          {/* Usamos id_player, que es el identificador del jugador en el backend. */}
           {jugadoresEquipo.map((jugador) => (
             <option key={jugador.id_player} value={jugador.id_player}>
               {jugador.name}
@@ -379,11 +490,7 @@ function CargarFecha({ temporada }) {
                   type="button"
                   disabled={bloqueado}
                   onClick={() =>
-                    eliminarEvento(
-                      partidoId,
-                      campo,
-                      indice
-                    )
+                    eliminarEvento(partidoId, campo, indice)
                   }
                 >
                   ×
@@ -398,9 +505,9 @@ function CargarFecha({ temporada }) {
 
   const partidosFiltrados = fechaSeleccionada
     ? partidos.filter(
-      (partido) =>
-        String(partido.matchday) === String(fechaSeleccionada)
-    )
+        (partido) =>
+          String(partido.matchday) === String(fechaSeleccionada)
+      )
     : [];
 
   return (
@@ -425,14 +532,15 @@ function CargarFecha({ temporada }) {
 
       {partidosFiltrados.map((partido) => {
         const resultado = resultados[partido.id_match] || {};
-        const jugadoresLocal = obtenerJugadoresEquipo();
-        const jugadoresVisitante = obtenerJugadoresEquipo();
+        const jugadoresLocal = jugadores;
+        const jugadoresVisitante = jugadores;
         const bloqueado = partidosBloqueados[partido.id_match];
 
         return (
           <div
-            className={`resultado-partido ${bloqueado ? "resultado-partido--bloqueado" : ""
-              }`}
+            className={`resultado-partido ${
+              bloqueado ? "resultado-partido--bloqueado" : ""
+            }`}
             key={partido.id_match}
           >
             <div className="partido-encabezado">
@@ -589,4 +697,3 @@ function CargarFecha({ temporada }) {
 }
 
 export default CargarFecha;
-
