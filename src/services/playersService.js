@@ -22,7 +22,7 @@ export async function getScorers(seasonId) {
   ]);
 
   const jugadoresPorId = new Map(
-    jugadores.map((jugador) => [jugador.id_person ?? jugador.id, jugador])
+    jugadores.map((jugador) => [jugador.id_player, jugador])
   );
 
   const listaEstadisticas = Array.isArray(estadisticas)
