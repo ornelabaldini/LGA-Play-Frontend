@@ -142,7 +142,7 @@ function CargarFecha({ temporada }) {
   // Busca al jugador utilizando el identificador que entrega el backend.
   function obtenerNombreJugador(jugadorId) {
     const jugador = jugadores.find(
-      (j) => Number(j.id_person) === Number(jugadorId)
+      (j) => Number(j.id_player) === Number(jugadorId)
     );
 
     return jugador?.name || `Jugador ${jugadorId}`;
@@ -290,9 +290,9 @@ function CargarFecha({ temporada }) {
                 : "Seleccionar goleador"}
           </option>
 
-          {/* Usamos id_person, que es el identificador del jugador en el backend. */}
+          {/* Usamos id_player, que es el identificador del jugador en el backend. */}
           {jugadoresEquipo.map((jugador) => (
-            <option key={jugador.id_person} value={jugador.id_person}>
+            <option key={jugador.id_player} value={jugador.id_player}>
               {jugador.name}
             </option>
           ))}
@@ -358,9 +358,9 @@ function CargarFecha({ temporada }) {
         >
           <option value="">Seleccionar jugador</option>
 
-          {/* Usamos id_person, que es el identificador del jugador en el backend. */}
+          {/* Usamos id_player, que es el identificador del jugador en el backend. */}
           {jugadoresEquipo.map((jugador) => (
-            <option key={jugador.id_person} value={jugador.id_person}>
+            <option key={jugador.id_player} value={jugador.id_player}>
               {jugador.name}
             </option>
           ))}
@@ -589,3 +589,4 @@ function CargarFecha({ temporada }) {
 }
 
 export default CargarFecha;
+
