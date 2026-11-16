@@ -31,8 +31,10 @@ function CargarFecha({ temporada }) {
     }));
   }
 
-  async function cargarDatos() {
-    setFechaSeleccionada("");
+  async function cargarDatos(mantenerFecha = false) {
+    if (!mantenerFecha) {
+      setFechaSeleccionada("");
+    }
     setResultados({});
     setErroresGuardado({});
 
@@ -301,49 +303,49 @@ function CargarFecha({ temporada }) {
       }));
 
       const payload = {
-  scorers: [
-    ...goleadoresLocal.flatMap((g) =>
-      Array.from({ length: Number(g.cantidad) }, () => ({
-        player_id: Number(g.playerId),
-        team_id: partido.teamA_id,
-        own_goal: false,
-      }))
-    ),
-    ...goleadoresVisitante.flatMap((g) =>
-      Array.from({ length: Number(g.cantidad) }, () => ({
-        player_id: Number(g.playerId),
-        team_id: partido.teamB_id,
-        own_goal: false,
-      }))
-    ),
-  ],
-  yellow_cards: [
-    ...(resultado.amarillasLocal || []),
-    ...(resultado.amarillasVisitante || []),
-  ],
-  red_cards: [
-    ...(resultado.rojasLocal || []),
-    ...(resultado.rojasVisitante || []),
-  ],
-};
+        scorers: [
+          ...goleadoresLocal.flatMap((g) =>
+            Array.from({ length: Number(g.cantidad) }, () => ({
+              player_id: Number(g.playerId),
+              team_id: partido.teamA_id,
+              own_goal: false,
+            }))
+          ),
+          ...goleadoresVisitante.flatMap((g) =>
+            Array.from({ length: Number(g.cantidad) }, () => ({
+              player_id: Number(g.playerId),
+              team_id: partido.teamB_id,
+              own_goal: false,
+            }))
+          ),
+        ],
+        yellow_cards: [
+          ...(resultado.amarillasLocal || []),
+          ...(resultado.amarillasVisitante || []),
+        ],
+        red_cards: [
+          ...(resultado.rojasLocal || []),
+          ...(resultado.rojasVisitante || []),
+        ],
+      };
 
-console.log("DATOS ENVIADOS:", payload);
+      console.log("DATOS ENVIADOS:", payload);
 
-const respuesta = await actualizarResultado(partidoId, payload);
+      const respuesta = await actualizarResultado(partidoId, payload);
 
-console.log("RESPUESTA DEL BACKEND:", respuesta);
+      console.log("RESPUESTA DEL BACKEND:", respuesta);
 
       setPartidosBloqueados((prev) => ({
         ...prev,
         [partidoId]: true,
       }));
 
+      await cargarDatos(true);
+
       setErroresGuardado((prev) => ({
         ...prev,
         [partidoId]: "Resultado guardado correctamente.",
       }));
-
-      await cargarDatos();
     } catch (error) {
       console.error("Error guardando resultado:", error);
 
@@ -505,9 +507,9 @@ console.log("RESPUESTA DEL BACKEND:", respuesta);
 
   const partidosFiltrados = fechaSeleccionada
     ? partidos.filter(
-        (partido) =>
-          String(partido.matchday) === String(fechaSeleccionada)
-      )
+      (partido) =>
+        String(partido.matchday) === String(fechaSeleccionada)
+    )
     : [];
 
   return (
@@ -538,9 +540,8 @@ console.log("RESPUESTA DEL BACKEND:", respuesta);
 
         return (
           <div
-            className={`resultado-partido ${
-              bloqueado ? "resultado-partido--bloqueado" : ""
-            }`}
+            className={`resultado-partido ${bloqueado ? "resultado-partido--bloqueado" : ""
+              }`}
             key={partido.id_match}
           >
             <div className="partido-encabezado">
