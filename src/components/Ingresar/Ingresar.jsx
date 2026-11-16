@@ -30,7 +30,13 @@ function Ingresar({ esAdmin, setEsAdmin }) {
     try {
       const respuesta = await apiRequest(ENDPOINTS.auth.login, {
         method: "POST",
-        body: JSON.stringify({ username, password }),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          username,
+          password,
+        }),
       });
 
       // Guarda el token JWT para las próximas solicitudes.
