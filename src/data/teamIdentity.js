@@ -8,7 +8,7 @@ const TEAM_IDENTITIES = {
   6: "https://www.futbolinterior.com.ar/images/stories/clubes/41SantosdelOeste.gif",
   7: "https://www.futbolinterior.com.ar/images/stories/clubes/1003sanmartin.gif",
   8: "https://www.futbolinterior.com.ar/images/stories/clubes/41once.gif",
-  9: null,
+  9:  "/escudos/huracanes.jpg",
   10: "https://www.futbolinterior.com.ar/images/stories/clubes/41DefensoresSur.gif",
   11: "https://www.futbolinterior.com.ar/images/stories/clubes/41sud.gif",
   12: "https://www.futbolinterior.com.ar/images/stories/clubes/41atletico.gif",
