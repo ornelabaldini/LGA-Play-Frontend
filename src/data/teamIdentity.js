@@ -1,95 +1,19 @@
-const DEFAULT_IDENTITY = {
-  primary: "#15803d",
-  secondary: "#22c55e",
-  pattern: "solid",
-};
 
 const TEAM_IDENTITIES = {
-  // 1 - Defensores
-  1: {
-    primary: "#2563eb",
-    secondary: "#ffffff",
-    pattern: "horizontal",
-  },
-
-  // 2 - Juventud Unida
-  2: {
-    primary: "#dc2626",
-    secondary: "#111827",
-    pattern: "vertical",
-  },
-
-  // 3 - Amigos Unidos
-  3: {
-    primary: "#2563eb",
-    secondary: "#dc2626",
-    pattern: "vertical",
-  },
-
-  // 4 - Quilmes
-  4: {
-    primary: "#ffffff",
-    secondary: "#2563eb",
-    pattern: "horizontal",
-  },
-
-  // 5 - Polvorín
-  5: {
-    primary: "#dc2626",
-    secondary: "#ffffff",
-    pattern: "vertical",
-  },
-
-  // 6 - Los Santos
-  6: {
-    primary: "#111827",
-    secondary: "#ffffff",
-    pattern: "horizontal",
-  },
-
-  // 7 - San Martín
-  7: {
-    primary: "#ffffff",
-    secondary: "#2563eb",
-    pattern: "horizontal",
-  },
-
-  // 8 - Once Unidos
-  8: {
-    primary: "#2563eb",
-    secondary: "#ffffff",
-    pattern: "vertical",
-  },
-
-  // 9 - Huracanes
-  9: {
-    primary: "#dc2626",
-    secondary: "#111827",
-    pattern: "vertical",
-  },
-
-  // 10 - Defensores DS
-  10: {
-    primary: "#2563eb",
-    secondary: "#ffffff",
-    pattern: "horizontal",
-  },
-
-  // 11 - Sudamérica
-  11: {
-    primary: "#15803d",
-    secondary: "#ffffff",
-    pattern: "vertical",
-  },
-
-  // 12 - Atlético
-  12: {
-    primary: "#dc2626",
-    secondary: "#ffffff",
-    pattern: "vertical",
-  },
+  1: "https://www.futbolinterior.com.ar/images/stories/clubes/41defe.gif",
+  2: "https://www.futbolinterior.com.ar/images/stories/04-2026/1775314723_69d12723db611.png",
+  3: "https://www.futbolinterior.com.ar/images/stories/04-2026/1775314681_69d126f9ec8f9.png",
+  4: "https://www.futbolinterior.com.ar/images/stories/04-2026/1775314758_69d127460e2c7.png",
+  5: "https://www.futbolinterior.com.ar/images/stories/clubes/41elpolvorin.gif",
+  6: "https://www.futbolinterior.com.ar/images/stories/clubes/41SantosdelOeste.gif",
+  7: "https://www.futbolinterior.com.ar/images/stories/clubes/1003sanmartin.gif",
+  8: "https://www.futbolinterior.com.ar/images/stories/clubes/41once.gif",
+  9: null,
+  10: "https://www.futbolinterior.com.ar/images/stories/clubes/41DefensoresSur.gif",
+  11: "https://www.futbolinterior.com.ar/images/stories/clubes/41sud.gif",
+  12: "https://www.futbolinterior.com.ar/images/stories/clubes/41atletico.gif",
 };
 
 export function getTeamIdentity(teamId) {
-  return TEAM_IDENTITIES[teamId] ?? DEFAULT_IDENTITY;
+  return TEAM_IDENTITIES[teamId] ?? null;
 }

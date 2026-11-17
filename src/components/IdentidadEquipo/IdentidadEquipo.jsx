@@ -1,18 +1,18 @@
+
 import { getTeamIdentity } from "../../data/teamIdentity";
 import "./IdentidadEquipo.css";
 
 function IdentidadEquipo({ teamId, teamName }) {
-  const { primary, secondary, pattern } = getTeamIdentity(teamId);
+  const escudo = getTeamIdentity(teamId);
+
+  if (!escudo) return null;
 
   return (
-    <span
-      className={`identidad-equipo identidad-equipo--${pattern}`}
-      style={{
-        "--color-principal": primary,
-        "--color-secundario": secondary,
-      }}
-      title={`Colores de ${teamName}`}
-      aria-hidden="true"
+    <img
+      className="identidad-equipo"
+      src={escudo}
+      alt={`Escudo de ${teamName}`}
+      title={`Escudo de ${teamName}`}
     />
   );
 }
