@@ -27,4 +27,5 @@ export const ENDPOINTS = {
 
   // Teams
   teamById: (id) => `/teams/${id}`,
+  teamStats: (id, season) => `/teams/${id}/stats?season=${season}`,
 };

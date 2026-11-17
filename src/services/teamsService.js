@@ -20,3 +20,7 @@ export async function getStandings(temporada) {
 
   return Array.isArray(respuesta) ? respuesta : respuesta?.value ?? [];
 }
+
+export function getTeamStats(id, temporada) {
+  return apiRequest(ENDPOINTS.teamStats(id, temporada));
+}

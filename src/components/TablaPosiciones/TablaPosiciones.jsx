@@ -74,7 +74,7 @@ function TablaPosiciones({ temporada }) {
               <td>{index + 1}</td>
               <td>
                 <Link
-                  to={`/equipos/${equipo.id_team}`}
+                  to={`/equipos/${equipo.id_team}?season=${temporada}`}
                   className="equipo-enlace"
                 >
                   <IdentidadEquipo
