@@ -68,11 +68,6 @@ function EquipoDetalle() {
                 Posición {estadisticas.position} · Temporada {temporada}
               </p>
             </div>
-
-            <span>
-              <small>DG</small>
-              {estadisticas.goal_difference}
-            </span>
           </header>
 
           <div className="equipo-detalle__estadisticas">
