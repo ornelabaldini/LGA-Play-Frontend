@@ -6,7 +6,6 @@ function MenuPrincipal({ seccion, setSeccion, esAdmin }) {
     { icono: "⚽", texto: "Fixture", seccion: "partidos" },
     { icono: "👟", texto: "Goleadores", seccion: "goleadores" },
     { icono: "🔥", texto: "Playoffs", seccion: "playoffs" },
-    { icono: "👔", texto: "Entrenadores", seccion: "entrenadores" },
   ];
 
   if (esAdmin) {

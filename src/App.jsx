@@ -5,7 +5,6 @@
 
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import Entrenadores from "./components/Entrenadores/Entrenadores";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import Hero from "./components/Hero/Hero";
@@ -86,12 +85,6 @@ function Inicio({ esAdmin }) {
           <Panel titulo="🔥 Playoffs">
             <Playoffs />
           </Panel>
-        </div>
-      )}
-
-      {seccion === "entrenadores" && (
-        <div id="entrenadores">
-          <Entrenadores esAdmin={esAdmin} />
         </div>
       )}
 
