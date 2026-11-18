@@ -57,3 +57,7 @@ export async function apiRequest(endpoint, options = {}) {
 
   return data;
 }
+
+export function obtenerToken() {
+  return localStorage.getItem(TOKEN_KEY);
+}

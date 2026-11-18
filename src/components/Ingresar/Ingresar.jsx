@@ -43,7 +43,7 @@ function Ingresar({ esAdmin, setEsAdmin }) {
       guardarToken(respuesta.access_token);
 
       // Establece los permisos según el tipo de cuenta.
-      setEsAdmin(respuesta.user.is_admin === true);
+      setEsAdmin(true);
 
       setMostrarFormulario(false);
       setUsername("");

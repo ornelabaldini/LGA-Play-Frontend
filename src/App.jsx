@@ -17,7 +17,8 @@ import EquipoDetalle from "./components/EquipoDetalle/EquipoDetalle";
 import MenuPrincipal from "./components/MenuPrincipal/MenuPrincipal";
 import Playoffs from "./components/Playoffs/Playoffs";
 import CargarFecha from "./components/CargarFecha/CargarFecha";
-
+import { apiRequest, obtenerToken } from "./api/apiClient";
+import { ENDPOINTS } from "./api/endpoints";
 import "./App.css";
 
 function Inicio({ esAdmin }) {
@@ -102,6 +103,21 @@ function Inicio({ esAdmin }) {
 function App() {
   const [esAdmin, setEsAdmin] = useState(false);
   const [sesionExpirada, setSesionExpirada] = useState(false);
+
+  useEffect(() => {
+    async function recuperarSesion() {
+      if (!obtenerToken()) return;
+
+      try {
+        await apiRequest(ENDPOINTS.auth.me);
+        setEsAdmin(true);
+      } catch (error) {
+        setEsAdmin(false);
+      }
+    }
+
+    recuperarSesion();
+  }, []);
 
   useEffect(() => {
     if (sessionStorage.getItem("sesionExpirada") === "true") {

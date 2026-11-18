@@ -1,4 +1,4 @@
-
+import { getTeamPlayers } from "../../services/teamsService";
 import { useEffect, useState } from "react";
 import { getMatchesWithTeams } from "../../services/matchesService";
 import { getPlayers } from "../../services/playersService";
@@ -12,6 +12,7 @@ function CargarFecha({ temporada }) {
   const [resultados, setResultados] = useState({});
   const [erroresGuardado, setErroresGuardado] = useState({});
   const [partidosBloqueados, setPartidosBloqueados] = useState({});
+  const [jugadoresPorEquipo, setJugadoresPorEquipo] = useState({});
 
   useEffect(() => {
     cargarDatos();
@@ -46,6 +47,22 @@ function CargarFecha({ temporada }) {
 
       setPartidos(partidosData);
       setJugadores(jugadoresData);
+
+      const equiposIds = [
+        ...new Set(partidosData.flatMap((partido) => [
+          partido.teamA_id,
+          partido.teamB_id,
+        ])),
+      ];
+
+      const jugadoresEquipos = await Promise.all(
+        equiposIds.map(async (teamId) => [
+          teamId,
+          await getTeamPlayers(teamId),
+        ])
+      );
+
+      setJugadoresPorEquipo(Object.fromEntries(jugadoresEquipos));
 
       setPartidosBloqueados(
         Object.fromEntries(
@@ -534,8 +551,11 @@ function CargarFecha({ temporada }) {
 
       {partidosFiltrados.map((partido) => {
         const resultado = resultados[partido.id_match] || {};
-        const jugadoresLocal = jugadores;
-        const jugadoresVisitante = jugadores;
+        const jugadoresLocal =
+          jugadoresPorEquipo[partido.teamA_id] || [];
+
+        const jugadoresVisitante =
+          jugadoresPorEquipo[partido.teamB_id] || [];
         const bloqueado = partidosBloqueados[partido.id_match];
 
         return (
