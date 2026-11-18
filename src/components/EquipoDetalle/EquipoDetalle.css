@@ -74,8 +74,21 @@
   font-weight: 700;
 }
 
+.equipo-detalle__entrenador {
+  padding: 14px;
+  border-radius: 8px;
+  background: var(--gris-fondo);
+  font-size: 15px;
+  color: var(--negro);
+}
+
+.equipo-detalle__entrenador strong {
+  color: var(--verde-oscuro);
+}
+
 @media (max-width: 500px) {
   .equipo-detalle__estadisticas {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+

@@ -45,6 +45,11 @@ export async function apiRequest(endpoint, options = {}) {
 
   // Controla los errores devueltos por el backend.
   if (!response.ok) {
+    if (response.status === 401 && token) {
+      eliminarToken();
+      window.dispatchEvent(new Event("auth:unauthorized"));
+    }
+
     throw new Error(
       data?.detail || `Error ${response.status}: ${response.statusText}`
     );

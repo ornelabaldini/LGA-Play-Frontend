@@ -69,3 +69,10 @@
   line-height: 1;
   cursor: pointer;
 }
+
+@media (max-width: 600px) {
+  .identidad-equipo {
+    width: 36px;
+    height: 36px;
+  }
+}

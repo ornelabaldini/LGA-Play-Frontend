@@ -2,6 +2,7 @@
 export const ENDPOINTS = {
   teams: "/teams",
   players: "/players",
+  coaches: "/coaches",
   matches: "/matches",
 
   auth: {
@@ -28,4 +29,12 @@ export const ENDPOINTS = {
   // Teams
   teamById: (id) => `/teams/${id}`,
   teamStats: (id, season) => `/teams/${id}/stats?season=${season}`,
+
+  // Coaches
+  coachTeam: (coachId) => `/coaches/${coachId}/team`,
+  createCoach: "/coaches",
+  updateCoach: (coachId) => `/coaches/${coachId}`,
+  deleteCoach: (coachId) => `/coaches/${coachId}`,
+  transferCoach: (coachId, teamId) =>
+    `/coaches/${coachId}/teams/${teamId}`,
 };

@@ -33,6 +33,54 @@ body {
   padding: 20px 24px 40px;
 }
 
+/* Modal de sesión expirada */
+.modal-sesion {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.modal-sesion__contenido {
+  width: 100%;
+  max-width: 420px;
+  padding: 30px;
+  border-radius: var(--radio);
+  background: var(--blanco);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.modal-sesion__contenido h2 {
+  margin: 0 0 14px;
+  color: #111827;
+  font-size: 24px;
+}
+
+.modal-sesion__contenido p {
+  margin: 0 0 24px;
+  color: var(--gris);
+  line-height: 1.5;
+}
+
+.modal-sesion__contenido button {
+  padding: 11px 24px;
+  border: none;
+  border-radius: var(--radio);
+  background: var(--verde-cancha);
+  color: var(--blanco);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-sesion__contenido button:hover {
+  opacity: 0.9;
+}
+
 @media (max-width: 700px) {
   .contenido {
     padding: 30px 15px 45px;

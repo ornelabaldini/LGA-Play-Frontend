@@ -1,0 +1,115 @@
+
+.entrenadores__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.entrenadores__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 16px;
+  border: 1px solid var(--gris-fondo);
+  border-radius: var(--radio);
+}
+
+.entrenadores__datos h3 {
+  margin: 0 0 6px;
+  color: var(--negro);
+}
+
+.entrenadores__datos p {
+  margin: 0;
+  color: var(--gris);
+}
+
+.entrenadores__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.entrenadores__acciones button,
+.entrenadores__botones button {
+  padding: 9px 14px;
+  border: none;
+  border-radius: var(--radio);
+  background: var(--verde-cancha);
+  color: var(--blanco);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.entrenadores__acciones button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.entrenadores__transferencia {
+  display: flex;
+  gap: 8px;
+}
+
+.entrenadores__transferencia select,
+.entrenadores__formulario input {
+  min-width: 160px;
+  padding: 9px;
+  border: 1px solid #ccc;
+  border-radius: var(--radio);
+}
+
+.entrenadores__formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 450px;
+}
+
+.entrenadores__formulario label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-weight: 600;
+}
+
+.entrenadores__botones {
+  display: flex;
+  gap: 10px;
+}
+
+.entrenadores__error {
+  color: #b42318;
+  font-weight: 600;
+}
+
+.entrenadores__mensaje {
+  color: var(--verde-oscuro);
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  .entrenadores__item {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .entrenadores__acciones {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .entrenadores__transferencia {
+    flex-direction: column;
+  }
+
+  .entrenadores__transferencia select {
+    width: 100%;
+  }
+
+  .entrenadores__acciones button {
+    width: 100%;
+  }
+}

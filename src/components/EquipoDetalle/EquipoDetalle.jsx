@@ -1,4 +1,4 @@
-
+import { getCoachByTeam } from "../../services/coachesService";
 import { useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
@@ -19,6 +19,7 @@ function EquipoDetalle() {
   const [estadisticas, setEstadisticas] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
+  const [entrenador, setEntrenador] = useState(null);
 
   useEffect(() => {
     setCargando(true);
@@ -27,10 +28,12 @@ function EquipoDetalle() {
     Promise.all([
       getTeamById(teamId),
       getTeamStats(teamId, temporada),
+      getCoachByTeam(teamId),
     ])
-      .then(([datosEquipo, datosEstadisticas]) => {
+      .then(([datosEquipo, datosEstadisticas, datosEntrenador]) => {
         setEquipo(datosEquipo);
         setEstadisticas(datosEstadisticas);
+        setEntrenador(datosEntrenador);
       })
       .catch((err) => {
         setError(err.message);
@@ -77,6 +80,12 @@ function EquipoDetalle() {
             <span><small>PP</small>{estadisticas.losses}</span>
             <span><small>DG</small>{estadisticas.goal_difference}</span>
           </div>
+
+          <div className="equipo-detalle__entrenador">
+            <strong>Director técnico:</strong>{" "}
+            {entrenador?.name ?? "Sin DT asignado"}
+          </div>
+
         </section>
       </Panel>
     </main>

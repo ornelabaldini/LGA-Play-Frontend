@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-
+import Entrenadores from "./components/Entrenadores/Entrenadores";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import Hero from "./components/Hero/Hero";
@@ -89,6 +89,12 @@ function Inicio({ esAdmin }) {
         </div>
       )}
 
+      {seccion === "entrenadores" && (
+        <div id="entrenadores">
+          <Entrenadores esAdmin={esAdmin} />
+        </div>
+      )}
+
       {esAdmin && seccion === "cargarFecha" && (
         <div id="cargarFecha">
           <Panel titulo="Cargar Fecha">
@@ -102,6 +108,28 @@ function Inicio({ esAdmin }) {
 
 function App() {
   const [esAdmin, setEsAdmin] = useState(false);
+  const [sesionExpirada, setSesionExpirada] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("sesionExpirada") === "true") {
+      setSesionExpirada(true);
+      setEsAdmin(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const cerrarSesionPorToken = () => {
+      setEsAdmin(false);
+      sessionStorage.setItem("sesionExpirada", "true");
+      setSesionExpirada(true);
+    };
+
+    window.addEventListener("auth:unauthorized", cerrarSesionPorToken);
+
+    return () => {
+      window.removeEventListener("auth:unauthorized", cerrarSesionPorToken);
+    };
+  }, []);
 
   return (
     <div className="app">
@@ -111,6 +139,25 @@ function App() {
         <Route path="/" element={<Inicio esAdmin={esAdmin} />} />
         <Route path="/equipos/:teamId" element={<EquipoDetalle />} />
       </Routes>
+
+      {sesionExpirada && (
+        <div className="modal-sesion">
+          <div className="modal-sesion__contenido">
+            <h2>Sesión expirada</h2>
+            <p>
+              Tu sesión ha expirado. Ingresá nuevamente para continuar.
+            </p>
+            <button
+              onClick={() => {
+                sessionStorage.removeItem("sesionExpirada");
+                setSesionExpirada(false);
+              }}
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
