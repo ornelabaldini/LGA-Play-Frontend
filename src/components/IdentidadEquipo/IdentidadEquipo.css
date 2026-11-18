@@ -1,3 +1,4 @@
+
 .identidad-equipo__boton {
   width: 30px;
   height: 30px;
@@ -15,28 +16,26 @@
 .identidad-equipo {
   width: 48px;
   height: 48px;
-  flex-shrink: 0;
   display: block;
   object-fit: contain;
   border-radius: 4px;
 }
 
+/* Modal del escudo ampliado */
 .escudo-modal {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.85);
-  cursor: zoom-out;
+  background: rgba(0, 0, 0, 0.95);
+  cursor: pointer;
 }
 
 .escudo-modal__contenido {
   position: relative;
-  max-width: 90vw;
-  max-height: 90vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,11 +53,12 @@
   padding: 12px;
 }
 
+/* Botón para cerrar */
 .escudo-modal__cerrar {
   position: absolute;
-  top: -16px;
-  right: -16px;
-  z-index: 1;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
   width: 36px;
   height: 36px;
   border: none;

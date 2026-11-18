@@ -30,7 +30,11 @@ function IdentidadEquipo({ teamId, teamName }) {
       <button
         type="button"
         className="identidad-equipo__boton"
-        onClick={() => setAmpliado(true)}
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          setAmpliado(true);
+        }}
         aria-label={`Ampliar escudo de ${teamName}`}
       >
         <img
@@ -44,7 +48,11 @@ function IdentidadEquipo({ teamId, teamName }) {
       {ampliado && (
         <div
           className="escudo-modal"
-          onClick={() => setAmpliado(false)}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            setAmpliado(false);
+          }}
         >
           <div
             className="escudo-modal__contenido"
@@ -56,7 +64,11 @@ function IdentidadEquipo({ teamId, teamName }) {
             <button
               type="button"
               className="escudo-modal__cerrar"
-              onClick={() => setAmpliado(false)}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                setAmpliado(false);
+              }}
               aria-label="Cerrar imagen"
             >
               ×
