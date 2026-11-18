@@ -1,61 +1,58 @@
+
 import { apiRequest } from "../api/apiClient";
 import { ENDPOINTS } from "../api/endpoints";
 
-// Obtiene todos los entrenadores.
 export async function getCoaches() {
-  const respuesta = await apiRequest(ENDPOINTS.coaches);
-  return Array.isArray(respuesta) ? respuesta : respuesta?.value ?? [];
+    const respuesta = await apiRequest(ENDPOINTS.coaches);
+    return Array.isArray(respuesta) ? respuesta : respuesta?.value ?? [];
 }
 
-// Obtiene el equipo actual de un entrenador.
 export function getCoachTeam(coachId) {
-  return apiRequest(ENDPOINTS.coachTeam(coachId));
+    return apiRequest(ENDPOINTS.coachTeam(coachId));
 }
 
-// Busca el entrenador asignado a un equipo.
 export async function getCoachByTeam(teamId) {
-  const entrenadores = await getCoaches();
+    const respuesta = await apiRequest(ENDPOINTS.teamCoaches(teamId));
 
-  const entrenadoresConEquipo = await Promise.all(
-    entrenadores.map(async (entrenador) => {
-      const equipo = await getCoachTeam(entrenador.id_coach);
-      return { entrenador, equipo };
-    })
-  );
+    const entrenadores = Array.isArray(respuesta)
+        ? respuesta
+        : respuesta?.value ?? [];
 
-  const asignacion = entrenadoresConEquipo.find(
-    ({ equipo }) => Number(equipo?.id_team) === Number(teamId)
-  );
-
-  return asignacion?.entrenador ?? null;
+    return entrenadores[0] ?? null;
 }
 
-// Crea un entrenador.
 export function createCoach(datos) {
-  return apiRequest(ENDPOINTS.createCoach, {
-    method: "POST",
-    body: JSON.stringify(datos),
-  });
+    return apiRequest(ENDPOINTS.createCoach, {
+        method: "POST",
+        body: JSON.stringify(datos),
+    });
 }
 
-// Edita el nombre de un entrenador.
 export function updateCoach(coachId, datos) {
-  return apiRequest(ENDPOINTS.updateCoach(coachId), {
-    method: "PUT",
-    body: JSON.stringify(datos),
-  });
+    const parametros = new URLSearchParams({
+        name: datos.name,
+    }).toString();
+
+    return apiRequest(
+        `${ENDPOINTS.updateCoach(coachId)}?${parametros}`,
+        { method: "PATCH" }
+    );
 }
 
-// Elimina un entrenador.
 export function deleteCoach(coachId) {
-  return apiRequest(ENDPOINTS.deleteCoach(coachId), {
-    method: "DELETE",
-  });
+    return apiRequest(ENDPOINTS.deleteCoach(coachId), {
+        method: "DELETE",
+    });
 }
 
-// Transfiere un entrenador a otro equipo.
+export function assignCoach(teamId, coachId) {
+    return apiRequest(ENDPOINTS.assignCoach(teamId, coachId), {
+        method: "POST",
+    });
+}
+
 export function transferCoach(coachId, teamId) {
-  return apiRequest(ENDPOINTS.transferCoach(coachId, teamId), {
-    method: "PATCH",
-  });
+    return apiRequest(ENDPOINTS.transferCoach(coachId, teamId), {
+        method: "PATCH",
+    });
 }

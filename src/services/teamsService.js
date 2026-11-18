@@ -24,3 +24,9 @@ export async function getStandings(temporada) {
 export function getTeamStats(id, temporada) {
   return apiRequest(ENDPOINTS.teamStats(id, temporada));
 }
+
+// Obtiene los jugadores de un equipo.
+export async function getTeamPlayers(teamId) {
+  const respuesta = await apiRequest(ENDPOINTS.teamPlayers(teamId));
+  return Array.isArray(respuesta) ? respuesta : respuesta?.value ?? [];
+}

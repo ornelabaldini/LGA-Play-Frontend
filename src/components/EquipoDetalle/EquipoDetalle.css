@@ -1,3 +1,4 @@
+
 .volver {
   display: inline-block;
   margin-bottom: 14px;
@@ -20,13 +21,16 @@
 }
 
 .equipo-detalle__encabezado .identidad-equipo {
+  flex: 0 0 48px;
   width: 48px;
   height: 48px;
+  max-width: 48px;
   border-radius: 10px;
 }
 
 .equipo-detalle__encabezado div {
   flex: 1;
+  min-width: 0;
 }
 
 .equipo-detalle__encabezado h3,
@@ -42,12 +46,6 @@
   margin-top: 4px;
   color: #6b7280;
   font-size: 13px;
-}
-
-.equipo-detalle__encabezado > strong {
-  color: var(--verde-oscuro);
-  font-size: 18px;
-  white-space: nowrap;
 }
 
 .equipo-detalle__estadisticas {
@@ -78,17 +76,219 @@
   padding: 14px;
   border-radius: 8px;
   background: var(--gris-fondo);
-  font-size: 15px;
   color: var(--negro);
+  font-size: 15px;
 }
 
 .equipo-detalle__entrenador strong {
   color: var(--verde-oscuro);
 }
 
+.equipo-detalle__plantel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.equipo-detalle__plantel h3 {
+  margin: 0;
+  color: var(--verde-oscuro);
+  font-size: 18px;
+}
+
+.equipo-detalle__plantel ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.equipo-detalle__plantel li {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--gris-fondo);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.equipo-detalle__plantel li > span {
+  overflow-wrap: anywhere;
+}
+
+.equipo-detalle__acciones-principales {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.boton-modificar-equipo,
+.boton-cancelar-equipo {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.boton-modificar-equipo:hover,
+.boton-cancelar-equipo:hover {
+  background: #f1f5f9;
+}
+
+.equipo-detalle__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.equipo-detalle__acciones button {
+  padding: 6px 9px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: #fff;
+  color: #334155;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.equipo-detalle__acciones button:hover {
+  background: #f1f5f9;
+}
+
+.equipo-detalle__acciones .equipo-detalle__boton-eliminar {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.equipo-detalle__admin {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.equipo-detalle__admin-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+
+.equipo-detalle__admin-encabezado button {
+  white-space: nowrap;
+}
+
+.equipo-detalle__grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.equipo-detalle__grupo h4 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.equipo-detalle__formulario {
+  display: flex;
+  gap: 8px;
+}
+
+.equipo-detalle__grupo select {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: white;
+  font-size: 13px;
+}
+
+.boton-accion-equipo {
+  align-self: flex-start;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--verde-cancha);
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.boton-accion-equipo:hover {
+  opacity: 0.9;
+}
+
+.equipo-detalle button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.equipo-detalle__error,
+.equipo-detalle__mensaje {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.equipo-detalle__error {
+  border: 1px solid #fca5a5;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.equipo-detalle__mensaje {
+  border: 1px solid #a7f3d0;
+  background: #ecfdf5;
+  color: #047857;
+}
+
 @media (max-width: 500px) {
   .equipo-detalle__estadisticas {
     grid-template-columns: repeat(3, 1fr);
   }
-}
 
+  .equipo-detalle__plantel ul {
+    grid-template-columns: 1fr;
+  }
+
+  .equipo-detalle__encabezado {
+    gap: 10px;
+    padding-inline: 8px;
+    box-sizing: border-box;
+  }
+
+  .equipo-detalle__encabezado .identidad-equipo {
+    flex: 0 0 48px;
+  }
+
+  .equipo-detalle__formulario {
+    flex-direction: column;
+  }
+
+  .equipo-detalle__admin {
+    padding: 12px;
+  }
+}

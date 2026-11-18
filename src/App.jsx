@@ -130,7 +130,10 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Inicio esAdmin={esAdmin} />} />
-        <Route path="/equipos/:teamId" element={<EquipoDetalle />} />
+        <Route
+          path="/equipos/:teamId"
+          element={<EquipoDetalle esAdmin={esAdmin} />}
+        />
       </Routes>
 
       {sesionExpirada && (

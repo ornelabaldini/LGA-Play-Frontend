@@ -7,6 +7,7 @@ export const ENDPOINTS = {
 
   auth: {
     login: "/auth/login",
+    me: "/users/me",
   },
 
   // Matches
@@ -20,15 +21,34 @@ export const ENDPOINTS = {
   playoffsByGroup: (season, phase, bracketGroup) =>
     `/matches/playoffs/${season}/${phase}/${bracketGroup}`,
   updateMatchResult: (idMatch) => `/matches/${idMatch}/result`,
+  createMatch: "/matches",
+  createPlayoff: "/matches/playoffs",
+  playoffPenalties: (matchId) =>
+    `/matches/playoffs/${matchId}/penalties`,
 
   // Players
   playerById: (id) => `/players/${id}`,
   playerStats: (id, season) =>
     `/players/${id}/stats${season ? `?season=${season}` : ""}`,
+  playerTeam: (playerId) => `/players/${playerId}/team`,
+  createPlayer: "/players",
+  updatePlayer: (playerId) => `/players/${playerId}`,
+  deletePlayer: (playerId) => `/players/${playerId}`,
+  transferPlayer: (playerId, teamId) =>
+    `/players/${playerId}/teams/${teamId}`,
 
   // Teams
   teamById: (id) => `/teams/${id}`,
   teamStats: (id, season) => `/teams/${id}/stats?season=${season}`,
+  teamPlayers: (teamId) => `/teams/${teamId}/players`,
+  teamCoaches: (teamId) => `/teams/${teamId}/coaches`,
+  createTeam: "/teams",
+  updateTeam: (teamId) => `/teams/${teamId}`,
+  deleteTeam: (teamId) => `/teams/${teamId}`,
+  assignPlayer: (teamId, playerId) =>
+    `/teams/${teamId}/players/${playerId}`,
+  assignCoach: (teamId, coachId) =>
+    `/teams/${teamId}/coaches/${coachId}`,
 
   // Coaches
   coachTeam: (coachId) => `/coaches/${coachId}/team`,

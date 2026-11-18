@@ -2,19 +2,15 @@
 import { apiRequest } from "../api/apiClient";
 import { ENDPOINTS } from "../api/endpoints";
 
-// Obtiene todos los jugadores registrados en el backend.
 export async function getPlayers() {
   const respuesta = await apiRequest(ENDPOINTS.players);
-
   return Array.isArray(respuesta) ? respuesta : respuesta?.value ?? [];
 }
 
-// Obtiene un jugador específico por su ID.
 export function getPlayerById(id) {
   return apiRequest(ENDPOINTS.playerById(id));
 }
 
-// Obtiene los goleadores de una temporada.
 export async function getScorers(seasonId) {
   const [estadisticas, jugadores] = await Promise.all([
     apiRequest(ENDPOINTS.topScorers(seasonId)),
@@ -40,5 +36,37 @@ export async function getScorers(seasonId) {
       yellow_cards: 0,
       red_cards: 0,
     };
+  });
+}
+
+export function createPlayer(datos) {
+  return apiRequest(ENDPOINTS.createPlayer, {
+    method: "POST",
+    body: JSON.stringify(datos),
+  });
+}
+
+export function updatePlayer(playerId, datos) {
+  return apiRequest(ENDPOINTS.updatePlayer(playerId), {
+    method: "PUT",
+    body: JSON.stringify(datos),
+  });
+}
+
+export function deletePlayer(playerId) {
+  return apiRequest(ENDPOINTS.deletePlayer(playerId), {
+    method: "DELETE",
+  });
+}
+
+export function assignPlayer(teamId, playerId) {
+  return apiRequest(ENDPOINTS.assignPlayer(teamId, playerId), {
+    method: "POST",
+  });
+}
+
+export function transferPlayer(playerId, teamId) {
+  return apiRequest(ENDPOINTS.transferPlayer(playerId, teamId), {
+    method: "PATCH",
   });
 }
