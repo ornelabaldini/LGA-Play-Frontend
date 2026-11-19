@@ -1,4 +1,4 @@
-
+import Modal from "../Modal/Modal";
 import { useEffect, useState } from "react";
 import {
   getCoaches,
@@ -23,6 +23,9 @@ function Entrenadores({ esAdmin }) {
   const [nombre, setNombre] = useState("");
   const [entrenadorEditando, setEntrenadorEditando] = useState(null);
   const [equipoSeleccionado, setEquipoSeleccionado] = useState({});
+
+  const [modalEliminar, setModalEliminar] = useState(null);
+  const [eliminando, setEliminando] = useState(false);
 
   async function cargarDatos() {
     setCargando(true);
@@ -89,25 +92,27 @@ function Entrenadores({ esAdmin }) {
     setError("");
   }
 
-  async function eliminarEntrenador(entrenador) {
-    const confirmar = window.confirm(
-      `¿Querés eliminar a ${entrenador.name}?`
-    );
+  function eliminarEntrenador(entrenador) {
+    setModalEliminar(entrenador);
+  }
+  async function confirmarEliminar() {
+    if (!modalEliminar) return;
 
-    if (!confirmar) return;
-
+    setEliminando(true);
     setError("");
     setMensaje("");
 
     try {
-      await deleteCoach(entrenador.id_coach);
+      await deleteCoach(modalEliminar.id_coach);
       setMensaje("Entrenador eliminado correctamente.");
+      setModalEliminar(null);
       await cargarDatos();
     } catch (err) {
       setError(err.message || "No se pudo eliminar el entrenador.");
+    } finally {
+      setEliminando(false);
     }
   }
-
   async function cambiarEquipo(coachId) {
     const teamId = equipoSeleccionado[coachId];
 
@@ -253,6 +258,20 @@ function Entrenadores({ esAdmin }) {
             </div>
           </form>
         </Panel>
+      )}
+
+      {modalEliminar && (
+        <Modal
+          titulo="Eliminar director técnico"
+          descripcion={`¿Estás seguro de que querés eliminar a ${modalEliminar.name}?`}
+          textoConfirmar="Eliminar"
+          tipo="peligro"
+          onClose={() => {
+            if (!eliminando) setModalEliminar(null);
+          }}
+          onConfirm={confirmarEliminar}
+          cargando={eliminando}
+        />
       )}
     </section>
   );

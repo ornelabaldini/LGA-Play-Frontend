@@ -1,4 +1,4 @@
-
+import Modal from "../Modal/Modal";
 import { useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
@@ -54,6 +54,9 @@ function EquipoDetalle({ esAdmin }) {
   const [error, setError] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [huboCambios, setHuboCambios] = useState(false);
+
+  const [modal, setModal] = useState(null);
+  const [datosModal, setDatosModal] = useState({});
 
   async function cargarDatos() {
     const [
@@ -118,8 +121,24 @@ function EquipoDetalle({ esAdmin }) {
     setEquipoDestino("");
   }
 
-  async function ejecutarAccion(accion, confirmacion) {
-    if (confirmacion && !window.confirm(confirmacion)) return;
+  function abrirModal(configuracion) {
+    setDatosModal(configuracion.valores || {});
+    setModal(configuracion);
+  }
+
+  function cerrarModal() {
+    if (procesando) return;
+    setModal(null);
+    setDatosModal({});
+  }
+
+  async function confirmarModal() {
+    if (!modal?.onConfirm) return;
+
+    await modal.onConfirm(datosModal);
+  }
+
+  async function ejecutarAccion(accion) {
 
     setProcesando(true);
     setError("");
@@ -131,71 +150,131 @@ function EquipoDetalle({ esAdmin }) {
       await cargarDatos();
       await cargarDatosAdministrativos();
       setMensaje("Cambios guardados correctamente.");
+      return true;
     } catch (err) {
       setError(err.message);
+      return false;
     } finally {
       setProcesando(false);
     }
   }
-
   async function nuevoJugador() {
-    const dni = window.prompt("DNI del jugador:");
-    if (!dni) return;
+    abrirModal({
+      titulo: "Registrar jugador",
+      descripcion: "Ingresá los datos del nuevo jugador.",
+      textoConfirmar: "Registrar",
+      valores: { dni: "", name: "", position: "" },
+      campos: [
+        { name: "dni", label: "DNI", required: true },
+        { name: "name", label: "Nombre", required: true },
+        { name: "position", label: "Posición" },
+      ],
+      onConfirm: async ({ dni, name, position }) => {
+        if (!dni.trim() || !name.trim() || !/^\d+$/.test(dni)) {
+          setError("Ingresá un DNI válido y el nombre del jugador.");
+          return;
+        }
 
-    const name = window.prompt("Nombre del jugador:");
-    if (!name) return;
+        const exito = await ejecutarAccion(async () => {
+          await createPlayer({
+            dni: Number(dni),
+            name: name.trim(),
+            position: position.trim() || null,
+          });
+          await assignPlayer(teamId, Number(dni));
+        });
 
-    const position = window.prompt("Posición del jugador (opcional):");
-
-    await ejecutarAccion(async () => {
-      await createPlayer({
-        dni: Number(dni),
-        name,
-        position: position || null,
-      });
-      await assignPlayer(teamId, Number(dni));
+        if (exito) cerrarModal();
+      },
     });
   }
 
   async function editarJugador(jugador) {
-    const name = window.prompt("Nombre:", jugador.name);
-    if (!name) return;
+    abrirModal({
+      titulo: "Editar jugador",
+      descripcion: "Modificá los datos del jugador.",
+      textoConfirmar: "Guardar cambios",
+      valores: {
+        name: jugador.name,
+        position: jugador.position || "",
+      },
+      campos: [
+        { name: "name", label: "Nombre", required: true },
+        { name: "position", label: "Posición" },
+      ],
+      onConfirm: async ({ name, position }) => {
+        if (!name.trim()) {
+          setError("El nombre es obligatorio.");
+          return;
+        }
 
-    const position = window.prompt(
-      "Posición:",
-      jugador.position || ""
-    );
+        const exito = await ejecutarAccion(async () => {
+          await updatePlayer(jugador.id_player, {
+            name: name.trim(),
+            position: position.trim() || null,
+          });
+        });
 
-    await ejecutarAccion(() =>
-      updatePlayer(jugador.id_player, {
-        name,
-        position: position || null,
-      })
-    );
+        if (exito) cerrarModal();
+      },
+    });
   }
 
   async function nuevoEntrenador() {
-    const dni = window.prompt("DNI del director técnico:");
-    if (!dni) return;
+    abrirModal({
+      titulo: "Registrar director técnico",
+      descripcion: "Ingresá los datos del nuevo director técnico.",
+      textoConfirmar: "Registrar",
+      valores: { dni: "", name: "" },
+      campos: [
+        { name: "dni", label: "DNI", required: true },
+        { name: "name", label: "Nombre", required: true },
+      ],
+      onConfirm: async ({ dni, name }) => {
+        if (!dni.trim() || !name.trim() || !/^\d+$/.test(dni)) {
+          setError("Ingresá un DNI válido y el nombre del director técnico.");
+          return;
+        }
 
-    const name = window.prompt("Nombre del director técnico:");
-    if (!name) return;
+        const exito = await ejecutarAccion(async () => {
+          await createCoach({
+            dni: Number(dni),
+            name: name.trim(),
+          });
+          await assignCoach(teamId, Number(dni));
+        });
 
-    await ejecutarAccion(async () => {
-      await createCoach({ dni: Number(dni), name });
-      await assignCoach(teamId, Number(dni));
+        if (exito) cerrarModal();
+      },
     });
   }
 
   async function editarEntrenador() {
     if (!entrenador) return;
 
-    const name = window.prompt("Nombre:", entrenador.name);
-    if (!name) return;
+    abrirModal({
+      titulo: "Editar director técnico",
+      descripcion: "Modificá el nombre del director técnico.",
+      textoConfirmar: "Guardar cambios",
+      valores: { name: entrenador.name },
+      campos: [
+        { name: "name", label: "Nombre", required: true },
+      ],
+      onConfirm: async ({ name }) => {
+        if (!name.trim()) {
+          setError("El nombre es obligatorio.");
+          return;
+        }
 
-    await ejecutarAccion(() =>
-      updateCoach(entrenador.id_coach, { name })
-    );
+        const exito = await ejecutarAccion(() =>
+          updateCoach(entrenador.id_coach, {
+            name: name.trim(),
+          })
+        );
+
+        if (exito) cerrarModal();
+      },
+    });
   }
 
   const jugadoresDisponibles = todosLosJugadores.filter(
@@ -287,10 +366,19 @@ function EquipoDetalle({ esAdmin }) {
                           className="equipo-detalle__boton-eliminar"
                           disabled={procesando}
                           onClick={() =>
-                            ejecutarAccion(
-                              () => deletePlayer(jugador.id_player),
-                              `¿Eliminar a ${jugador.name}?`
-                            )
+                            abrirModal({
+                              titulo: "Eliminar jugador",
+                              descripcion: `¿Estás seguro de que querés eliminar a ${jugador.name}?`,
+                              textoConfirmar: "Eliminar",
+                              tipo: "peligro",
+                              onConfirm: async () => {
+                                const exito = await ejecutarAccion(() =>
+                                  deletePlayer(jugador.id_player)
+                                );
+
+                                if (exito) cerrarModal();
+                              },
+                            })
                           }
                         >
                           Eliminar
@@ -300,12 +388,21 @@ function EquipoDetalle({ esAdmin }) {
                           type="button"
                           disabled={procesando || !equipoDestino}
                           onClick={() =>
-                            ejecutarAccion(() =>
-                              transferPlayer(
-                                jugador.id_player,
-                                Number(equipoDestino)
-                              )
-                            )
+                            abrirModal({
+                              titulo: "Transferir jugador",
+                              descripcion: `¿Querés transferir a ${jugador.name} al equipo seleccionado?`,
+                              textoConfirmar: "Transferir",
+                              onConfirm: async () => {
+                                const exito = await ejecutarAccion(() =>
+                                  transferPlayer(
+                                    jugador.id_player,
+                                    Number(equipoDestino)
+                                  )
+                                );
+
+                                if (exito) cerrarModal();
+                              },
+                            })
                           }
                         >
                           Transferir
@@ -398,12 +495,18 @@ function EquipoDetalle({ esAdmin }) {
                     className="boton-accion-equipo"
                     disabled={procesando || !jugadorSeleccionado}
                     onClick={() =>
-                      ejecutarAccion(async () => {
-                        await assignPlayer(
-                          teamId,
-                          Number(jugadorSeleccionado)
-                        );
-                        setJugadorSeleccionado("");
+                      abrirModal({
+                        titulo: "Asignar jugador",
+                        descripcion: "¿Querés asignar este jugador al equipo?",
+                        textoConfirmar: "Asignar",
+                        onConfirm: async () => {
+                          const exito = await ejecutarAccion(async () => {
+                            await assignPlayer(teamId, Number(jugadorSeleccionado));
+                            setJugadorSeleccionado("");
+                          });
+
+                          if (exito) cerrarModal();
+                        },
                       })
                     }
                   >
@@ -430,10 +533,19 @@ function EquipoDetalle({ esAdmin }) {
                       className="equipo-detalle__boton-eliminar"
                       disabled={procesando}
                       onClick={() =>
-                        ejecutarAccion(
-                          () => deleteCoach(entrenador.id_coach),
-                          `¿Eliminar a ${entrenador.name}?`
-                        )
+                        abrirModal({
+                          titulo: "Eliminar director técnico",
+                          descripcion: `¿Estás seguro de que querés eliminar a ${entrenador.name}?`,
+                          textoConfirmar: "Eliminar",
+                          tipo: "peligro",
+                          onConfirm: async () => {
+                            const exito = await ejecutarAccion(() =>
+                              deleteCoach(entrenador.id_coach)
+                            );
+
+                            if (exito) cerrarModal();
+                          },
+                        })
                       }
                     >
                       Eliminar DT
@@ -471,12 +583,18 @@ function EquipoDetalle({ esAdmin }) {
                     className="boton-accion-equipo"
                     disabled={procesando || !entrenadorSeleccionado}
                     onClick={() =>
-                      ejecutarAccion(async () => {
-                        await assignCoach(
-                          teamId,
-                          Number(entrenadorSeleccionado)
-                        );
-                        setEntrenadorSeleccionado("");
+                      abrirModal({
+                        titulo: "Asignar director técnico",
+                        descripcion: "¿Querés asignar este director técnico al equipo?",
+                        textoConfirmar: "Asignar",
+                        onConfirm: async () => {
+                          const exito = await ejecutarAccion(async () => {
+                            await assignCoach(teamId, Number(entrenadorSeleccionado));
+                            setEntrenadorSeleccionado("");
+                          });
+
+                          if (exito) cerrarModal();
+                        },
                       })
                     }
                   >
@@ -507,12 +625,21 @@ function EquipoDetalle({ esAdmin }) {
                     className="boton-accion-equipo"
                     disabled={procesando || !equipoDestino}
                     onClick={() =>
-                      ejecutarAccion(() =>
-                        transferCoach(
-                          entrenador.id_coach,
-                          Number(equipoDestino)
-                        )
-                      )
+                      abrirModal({
+                        titulo: "Transferir director técnico",
+                        descripcion: `¿Querés transferir a ${entrenador.name} al equipo seleccionado?`,
+                        textoConfirmar: "Transferir",
+                        onConfirm: async () => {
+                          const exito = await ejecutarAccion(() =>
+                            transferCoach(
+                              entrenador.id_coach,
+                              Number(equipoDestino)
+                            )
+                          );
+
+                          if (exito) cerrarModal();
+                        },
+                      })
                     }
                   >
                     Transferir DT
@@ -523,6 +650,25 @@ function EquipoDetalle({ esAdmin }) {
           )}
         </section>
       </Panel>
+
+      {modal && (
+        <Modal
+          titulo={modal.titulo}
+          descripcion={modal.descripcion}
+          campos={modal.campos}
+          valores={datosModal}
+          onChange={(nombre, valor) =>
+            setDatosModal((actuales) => ({
+              ...actuales,
+              [nombre]: valor,
+            }))
+          }
+          onClose={cerrarModal}
+          onConfirm={confirmarModal}
+          textoConfirmar={modal.textoConfirmar}
+          cargando={procesando}
+        />
+      )}
     </main>
   );
 }
